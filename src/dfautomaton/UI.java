@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -46,34 +50,42 @@ public class UI extends JFrame {
 
         newState = new JButton("New State");
         setMaterialLNF(newState);
+        newState.setFocusable(false);
+        newState.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                repaint();
+            }
+        });
+        
         newTransition = new JButton("New Transition");
         setMaterialLNF(newTransition);
+        newTransition.setFocusable(false);
+        
         newFState = new JButton("New Final State");
         setMaterialLNF(newFState);
-        
+        newFState.setFocusable(false);
+
         newState.setBounds(WINDOW_WIDTH / 4 - 150, WINDOW_HEIGHT - 60, 100, 25);
         newTransition.setBounds(WINDOW_WIDTH / 4 - 40, WINDOW_HEIGHT - 60, 130, 25);
         newFState.setBounds(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT - 60, 130, 25);
-        
+
         getContentPane().add(panel);
         getContentPane().add(newState);
         getContentPane().add(newTransition);
         getContentPane().add(newFState);
 
         super.paintComponents(getGraphics());
-        paint();
     }
-
-    private void paint() {
-
-    }
-
-    @Override
-    public void update(Graphics g) {
-    }
-
+    
     @Override
     public void paint(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.drawOval(150, 150, 150, 150);
+    }
+    
+    @Override
+    public void update(Graphics g) {
     }
     
     public void setMaterialLNF(Component comp) {
