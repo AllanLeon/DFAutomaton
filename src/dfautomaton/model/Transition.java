@@ -65,10 +65,12 @@ public class Transition {
     }
     
     public Configuration execute(Configuration current) throws TransitionException {
-        if (current.getState().equals(initialState) && current.getWord().charAt(0) == symbol) {
-            current.setState(nextState);
-            current.cutWord();
-            return current;
+        if (!current.getWord().equals("")) {
+            if (current.getState().equals(initialState) && symbol == '\u03B5') {
+                return new Configuration(nextState, current.getWord());
+            } else if (current.getState().equals(initialState) && current.getWord().charAt(0) == symbol) {
+                return new Configuration(nextState, current.getWord().substring(1));
+            }
         }
         throw new TransitionException("Transition not found");
     }

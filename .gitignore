@@ -1,7 +1,7 @@
 build/
 bin/
 gen/
-nbproject/private
+nbproject/private/
 nbbuild/
 dist/
 nbdist/
