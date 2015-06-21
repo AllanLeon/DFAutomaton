@@ -14,10 +14,18 @@ public class Configuration {
     
     private State state;
     private String word;
+    private boolean dead;
 
     public Configuration(State state, String word) {
         this.state = state;
         this.word = word;
+        this.dead = false;
+    }
+    
+    public Configuration(State state, String word, boolean dead) {
+        this.state = state;
+        this.word = word;
+        this.dead = dead;
     }
 
     /**
@@ -32,6 +40,10 @@ public class Configuration {
      */
     public String getWord() {
         return word;
+    }
+    
+    public boolean isDead() {
+        return dead;
     }
 
     /**
@@ -48,15 +60,16 @@ public class Configuration {
         this.word = word;
     }
     
-    public void cutWord() {
-        word = word.substring(1);
+    public void setDead(boolean dead) {
+        this.dead = dead;
     }
     
     public boolean isEmpty() {
-        if (word.length() == 0) {
-            return true;
-        }
-        return false;
+        return word.length() == 0;
+    }
+    
+    public boolean isValid() {
+        return word.length() == 0 && state.isAccepted();
     }
 }
  
