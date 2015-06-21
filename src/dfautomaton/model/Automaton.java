@@ -129,12 +129,15 @@ public class Automaton {
         start(word);
         while (next()) {
             for (Configuration current : configurations.get(currentIteration - 1)) {
-                System.out.printf("%s %s $b", current.getState().getName(), current.getWord(), current.isDead());
+                System.out.printf("%s %s %b %b\n", current.getState().getName(),
+                        current.getWord(), current.isDead(), current.isValid());
             }
         }
     }
     
     public void start(String word) {
+        configurations.clear();
+        currentIteration = 0;
         List<Configuration> startList = new ArrayList<>();
         startList.add(new Configuration(initialState, word));
         configurations.add(startList);
@@ -154,8 +157,10 @@ public class Automaton {
                         Logger.getLogger(Automaton.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                current.setDead(true);
-                nextList.add(current);
+                if (!ok) {
+                    current.setDead(true);
+                    nextList.add(current);
+                }
             }
         }
         configurations.add(nextList);
