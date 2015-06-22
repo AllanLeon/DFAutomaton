@@ -6,6 +6,7 @@
 
 package dfautomaton.model;
 
+import dfautomaton.data.Constants;
 import dfautomaton.model.basics.Point;
 import java.util.Objects;
 
@@ -59,6 +60,10 @@ public class State {
         this.accepted = accepted;
     }
     
+    public void updateAccepted() {
+        this.accepted = !this.accepted;
+    }
+    
     /**
      * @return the pos
      */
@@ -71,6 +76,11 @@ public class State {
      */
     public void setPos(Point pos) {
         this.pos = pos;
+    }
+    
+    public boolean checkPointCollision(Point point) {
+        return Math.abs(point.getX() - pos.getX()) <= Constants.STATE_RADIUS
+                && Math.abs(point.getY() - pos.getY()) <= Constants.STATE_RADIUS;
     }
 
     @Override

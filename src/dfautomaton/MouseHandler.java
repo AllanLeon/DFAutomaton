@@ -1,7 +1,10 @@
 package dfautomaton;
 
+import dfautomaton.UI.DrawingState;
+import dfautomaton.UI.ModState;
 import dfautomaton.data.Constants;
 import dfautomaton.model.State;
+import dfautomaton.model.Transition;
 import dfautomaton.model.basics.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,9 +14,19 @@ import javax.swing.SwingUtilities;
 public class MouseHandler implements MouseListener, MouseMotionListener {
 
     private State selectedState;
+    private State startState;
+    private State endState;
 
     public MouseHandler() {
         selectedState = null;
+        startState = null;
+        endState = null;
+    }
+    
+    public void reset() {
+        selectedState = null;
+        startState = null;
+        endState = null;
     }
 
     private Point getClickedPoint(MouseEvent e) {
@@ -24,13 +37,30 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     private void handleStateCreation(Point clickedPoint) {
         UI.getAutomaton().addState(new State(String.format("q%d", UI.getAutomaton().getCreatedStatesQuantity()), false, clickedPoint));
-        System.out.println(UI.getAutomaton().getStates().size());
+        UI.drawingState = DrawingState.Drawing;
+    }
+    
+    private void handleTransitionCreation(Point clickedPoint) {
+        handleStateSelection(clickedPoint);
+        if (selectedState != null) {
+            if (startState == null) {
+                startState = selectedState;
+            } else if (endState == null) {
+                endState = selectedState;
+            }
+        }
+        if (endState != null && startState != null) {
+            UI.getAutomaton().addTransition(new Transition(startState, 'a', endState));
+            reset();
+            UI.drawingState = DrawingState.Drawing;
+        }
     }
     
     private void handleStateDeletion(Point clickedPoint) {
         for (State current : UI.getAutomaton().getStates()) {
-            if (checkPointCollision(current, clickedPoint)) {
+            if (current.checkPointCollision(clickedPoint)) {
                 UI.getAutomaton().getStates().remove(current);
+                UI.drawingState = DrawingState.Drawing;
             }
         }
     }
@@ -38,7 +68,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private void handleStateSelection(Point clickedPoint) {
         selectedState = null;
         for (State current : UI.getAutomaton().getStates()) {
-            if (checkPointCollision(current, clickedPoint)) {
+            if (current.checkPointCollision(clickedPoint)) {
                 selectedState = current;
             }
         }
@@ -48,16 +78,47 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         if (selectedState != null) {
             selectedState.getPos().setX(draggedPoint.getX());
             selectedState.getPos().setY(draggedPoint.getY());
+            UI.drawingState = DrawingState.Drawing;
+        }
+    }
+    
+    private void handleStateAccepted(Point clickedPoint) {
+        for (State current : UI.getAutomaton().getStates()) {
+            if (current.checkPointCollision(clickedPoint)) {
+                current.updateAccepted();
+                UI.drawingState = DrawingState.Drawing;
+            }
+        }
+    }
+    
+    private void handleStateInitial(Point clickedPoint) {
+        for (State current : UI.getAutomaton().getStates()) {
+            if (current.checkPointCollision(clickedPoint)) {
+                UI.getAutomaton().setInitialState(current);
+                UI.drawingState = DrawingState.Drawing;
+            }
         }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         Point clickedPoint = getClickedPoint(e);
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            handleStateCreation(clickedPoint);
-        } else if (SwingUtilities.isRightMouseButton(e)) {
-            handleStateDeletion(clickedPoint);
+        if (UI.modState == ModState.Creating) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                handleStateCreation(clickedPoint);
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                handleStateDeletion(clickedPoint);
+            }
+        } else if (UI.modState == ModState.Editing) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                handleStateInitial(clickedPoint);
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                handleStateAccepted(clickedPoint);
+            }
+        } else if (UI.modState == ModState.Transition) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                handleTransitionCreation(clickedPoint);
+            }
         }
     }
 
@@ -71,9 +132,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            Point draggedPoint = getClickedPoint(e);
-            handleStateMovement(draggedPoint);
+        if (UI.modState == ModState.Creating) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                Point draggedPoint = getClickedPoint(e);
+                handleStateMovement(draggedPoint);
+            }
         }
     }
 
@@ -91,10 +154,5 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-    }
-    
-    private boolean checkPointCollision(State state, Point point) {
-        return Math.abs(point.getX() - state.getPos().getX()) <= Constants.STATE_RADIUS
-                && Math.abs(point.getY() - state.getPos().getY()) <= Constants.STATE_RADIUS;
     }
 }

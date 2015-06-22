@@ -22,6 +22,17 @@ import javax.swing.Timer;
  * @author Franco Montiel
  */
 public class UI extends JFrame implements ActionListener {
+    
+    public enum DrawingState {
+        Waiting, Drawing
+    }
+
+    public enum ModState {
+        Creating, Editing, Transition
+    }
+    
+    public static DrawingState drawingState;
+    public static ModState modState;
 
     private static Automaton automaton;
     
@@ -38,6 +49,8 @@ public class UI extends JFrame implements ActionListener {
      */
     public UI() {
         automaton = new Automaton();
+        drawingState = DrawingState.Drawing;
+        modState = ModState.Creating;
         initialize();
         setVisible(true);
     }
@@ -67,17 +80,32 @@ public class UI extends JFrame implements ActionListener {
         newState.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                //drawInitState();
+                modState = ModState.Creating;
+                mouseHandler.reset();
             }
         });
 
         newTransition = new JButton("New Transition");
         setMaterialLNF(newTransition);
         newTransition.setFocusable(false);
+        newTransition.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                modState = ModState.Transition;
+                mouseHandler.reset();
+            }
+        });
 
         newFState = new JButton("New Final State");
         setMaterialLNF(newFState);
         newFState.setFocusable(false);
+        newFState.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                modState = ModState.Editing;
+                mouseHandler.reset();
+            }
+        });
 
         newState.setBounds(Constants.WINDOW_WIDTH / 4 - 150, Constants.WINDOW_HEIGHT - 60, 100, 25);
         newTransition.setBounds(Constants.WINDOW_WIDTH / 4 - 40, Constants.WINDOW_HEIGHT - 60, 130, 25);
@@ -105,15 +133,18 @@ public class UI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        paint();
+        if (drawingState == DrawingState.Drawing) {
+            paint();
+        }
     }
 
     private void paint() {
         dbg = doubleBuffer.getGraphics();
         dbg.setColor(Color.BLACK);
         dbg.fillRect(0, 0, Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT);
-        Drawer.drawStates(dbg, automaton.getStates());
+        Drawer.drawAutomaton(dbg, automaton);
         panel.getGraphics().drawImage(doubleBuffer, 0, 0, this);
+        drawingState = DrawingState.Waiting;
     }
     
     public static Automaton getAutomaton() {

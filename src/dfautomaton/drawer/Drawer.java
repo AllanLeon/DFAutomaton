@@ -6,10 +6,13 @@
 package dfautomaton.drawer;
 
 import dfautomaton.data.Constants;
+import dfautomaton.model.Automaton;
 import dfautomaton.model.State;
+import dfautomaton.model.Transition;
 import dfautomaton.model.basics.Point;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -179,9 +182,34 @@ public class Drawer {
         putPixel(g, -x + centerX, y + centerY);
     }
     
+    public static void drawTransition(Graphics g, Transition transition) {
+        Point start = transition.getInitialState().getPos();
+        Point end = transition.getNextState().getPos();
+        drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
+        g.drawString("" + transition.getSymbol(), (start.getX() + end.getX()) / 2,
+                Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
+    }
+    
+    public static void drawInitialStateArrow(Graphics g, State state) {
+        if (state != null) {
+            drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS - 10,
+                    state.getPos().getY(), state.getPos().getX() - Constants.STATE_RADIUS,
+                    state.getPos().getY(), Color.yellow);
+        }
+    }
+    
     public static void drawState(Graphics g, State state) {
+        if (state.isAccepted()) {
+            drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS * 2 / 3, Color.WHITE);
+        }
         drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.WHITE);
         g.drawString(state.getName(), state.getPos().getX(), Constants.PANEL_HEIGHT - state.getPos().getY());
+    }
+    
+    public static void drawTransitions(Graphics g, List<Transition> transitions) {
+        for (Transition transition : transitions) {
+            drawTransition(g, transition);
+        }
     }
 
     public static void drawStates(Graphics g, Set<State> states) {
@@ -190,4 +218,9 @@ public class Drawer {
         }
     }
 
+    public static void drawAutomaton(Graphics g, Automaton automaton) {
+        drawStates(g, automaton.getStates());
+        drawInitialStateArrow(g, automaton.getInitialState());
+        drawTransitions(g, automaton.getTransitions());
+    }
 }

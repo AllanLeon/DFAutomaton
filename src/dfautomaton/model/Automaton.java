@@ -34,7 +34,7 @@ public class Automaton {
         alphabet = new HashSet<>();
         acceptedStates = new HashSet<>();
         transitions = new ArrayList<>();
-        initialState = new State("", false);
+        initialState = null;
         configurations = new ArrayList<>();
         currentIteration = 0;
         createdStatesQuantity = 0;
@@ -109,14 +109,17 @@ public class Automaton {
     }
     
     public void addTransition(Transition transition) {
-        if (states.contains(transition.getInitialState()) &&
-            states.contains(transition.getNextState()) &&
-            alphabet.contains(transition.getSymbol())) {
+        //if (states.contains(transition.getInitialState()) &&
+        //    states.contains(transition.getNextState()) &&
+        //    alphabet.contains(transition.getSymbol())) {
             transitions.add(transition);
-        }
+        //}
     }
     
     public void removeState(State state) {
+        if (state == initialState) {
+            initialState = null;
+        }
         states.remove(state);
     }
     
