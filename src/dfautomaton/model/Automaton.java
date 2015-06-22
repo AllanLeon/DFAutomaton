@@ -27,6 +27,7 @@ public class Automaton {
     //private String currentWord;
     private State initialState;
     private int currentIteration;
+    private int createdStatesQuantity;
     
     public Automaton() {
         states = new HashSet<>();
@@ -36,6 +37,7 @@ public class Automaton {
         initialState = new State("", false);
         configurations = new ArrayList<>();
         currentIteration = 0;
+        createdStatesQuantity = 0;
         //currentWord = "";
     }
 
@@ -66,6 +68,10 @@ public class Automaton {
     public List<Transition> getTransitions() {
         return transitions;
     }
+    
+    public int getCreatedStatesQuantity() {
+        return createdStatesQuantity;
+    }
 
     public void setTransitions(ArrayList<Transition> transitions) {
         this.transitions = transitions;
@@ -89,6 +95,7 @@ public class Automaton {
     
     public void addState(State state) {
         states.add(state);
+        createdStatesQuantity++;
     }
     
     public void addAcceptedState(State state) {
