@@ -27,15 +27,17 @@ public class Automaton {
     //private String currentWord;
     private State initialState;
     private int currentIteration;
+    private int createdStatesQuantity;
     
     public Automaton() {
         states = new HashSet<>();
         alphabet = new HashSet<>();
         acceptedStates = new HashSet<>();
         transitions = new ArrayList<>();
-        initialState = new State("", false);
+        initialState = null;
         configurations = new ArrayList<>();
         currentIteration = 0;
+        createdStatesQuantity = 0;
         //currentWord = "";
     }
 
@@ -66,6 +68,10 @@ public class Automaton {
     public List<Transition> getTransitions() {
         return transitions;
     }
+    
+    public int getCreatedStatesQuantity() {
+        return createdStatesQuantity;
+    }
 
     public void setTransitions(ArrayList<Transition> transitions) {
         this.transitions = transitions;
@@ -89,6 +95,7 @@ public class Automaton {
     
     public void addState(State state) {
         states.add(state);
+        createdStatesQuantity++;
     }
     
     public void addAcceptedState(State state) {
@@ -102,14 +109,17 @@ public class Automaton {
     }
     
     public void addTransition(Transition transition) {
-        if (states.contains(transition.getInitialState()) &&
-            states.contains(transition.getNextState()) &&
-            alphabet.contains(transition.getSymbol())) {
+        //if (states.contains(transition.getInitialState()) &&
+        //    states.contains(transition.getNextState()) &&
+        //    alphabet.contains(transition.getSymbol())) {
             transitions.add(transition);
-        }
+        //}
     }
     
     public void removeState(State state) {
+        if (state == initialState) {
+            initialState = null;
+        }
         states.remove(state);
     }
     

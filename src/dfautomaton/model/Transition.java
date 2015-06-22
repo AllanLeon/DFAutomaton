@@ -6,6 +6,9 @@
 
 package dfautomaton.model;
 
+import dfautomaton.data.Constants;
+import dfautomaton.model.basics.Point;
+
 /**
  *
  * @author Allan Leon
@@ -73,5 +76,9 @@ public class Transition {
             }
         }
         throw new TransitionException("Transition not found");
+    }
+    
+    public boolean checkPointCollision(Point point) {
+        return false;
     }
 }
