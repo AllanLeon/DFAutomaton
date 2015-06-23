@@ -70,7 +70,7 @@ public class UI extends JFrame implements ActionListener {
         panel = new JPanel();
         panel.setBackground(Color.DARK_GRAY);
         panel.setBounds(10, 10, Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT);
-        mouseHandler = new MouseHandler();
+        mouseHandler = new MouseHandler(this);
         panel.addMouseListener(mouseHandler);
         panel.addMouseMotionListener(mouseHandler);
 

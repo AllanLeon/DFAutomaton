@@ -186,7 +186,12 @@ public class Drawer {
         Point start = transition.getInitialState().getPos();
         Point end = transition.getNextState().getPos();
         drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
-        g.drawString("" + transition.getSymbol(), (start.getX() + end.getX()) / 2,
+        String transitionText = "";
+        for (Character symbol : transition.getSymbols()) {
+            transitionText += symbol + ",";
+        }
+        transitionText = transitionText.substring(0, transitionText.length() - 1);
+        g.drawString(transitionText, (start.getX() + end.getX()) / 2,
                 Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
     }
     

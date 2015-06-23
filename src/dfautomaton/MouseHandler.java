@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Iterator;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
@@ -19,8 +20,10 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private State endState;
     private Iterator iter;
     private boolean found;
+    private JFrame parent;
 
-    public MouseHandler() {
+    public MouseHandler(JFrame parent) {
+        this.parent = parent;
         selectedState = null;
         startState = null;
         endState = null;
@@ -53,7 +56,9 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
         if (endState != null && startState != null) {
-            UI.getAutomaton().addTransition(new Transition(startState, 'a', endState));
+            Transition newTransition = new Transition(startState, endState);
+            UI.getAutomaton().addTransition(newTransition);
+            new TransitionSymbolDialog(parent, newTransition);
             reset();
             UI.drawingState = DrawingState.Drawing;
         }
@@ -82,6 +87,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             if (current.checkPointCollision(clickedPoint)) {
                 UI.getAutomaton().getStates().remove(current);
                 UI.drawingState = DrawingState.Drawing;
+                found = true;
             }
         }
     }
