@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dfautomaton.drawer;
 
 import dfautomaton.data.Constants;
@@ -144,6 +139,17 @@ public class Drawer {
         }
     }
 
+    public static void drawArrow(Graphics g, int x0, int y0, int x1, int y1, State state, Color color) {
+        g.setColor(color);
+        drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS - 10,
+                state.getPos().getY(), state.getPos().getX() - Constants.STATE_RADIUS,
+                state.getPos().getY(), color);
+        drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS,
+                state.getPos().getY() - 10, state.getPos().getX() - Constants.STATE_RADIUS,
+                state.getPos().getY(), color);
+        drawLine(g, x0, y0, x1, y1, color);
+    }
+
     public static void drawCircle(Graphics g, int centerX, int centerY, int radius, Color color) {
         g.setColor(color);
 
@@ -181,7 +187,7 @@ public class Drawer {
         putPixel(g, -y + centerX, x + centerY);
         putPixel(g, -x + centerX, y + centerY);
     }
-    
+
     public static void drawTransition(Graphics g, Transition transition) {
         Point start = transition.getInitialState().getPos();
         Point end = transition.getNextState().getPos();
@@ -189,15 +195,15 @@ public class Drawer {
         g.drawString("" + transition.getSymbol(), (start.getX() + end.getX()) / 2,
                 Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
     }
-    
+
     public static void drawInitialStateArrow(Graphics g, State state) {
         if (state != null) {
-            drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS - 10,
-                    state.getPos().getY(), state.getPos().getX() - Constants.STATE_RADIUS,
-                    state.getPos().getY(), Color.yellow);
+            drawArrow(g, state.getPos().getX() - Constants.STATE_RADIUS - 20,
+                    state.getPos().getY() - 20, state.getPos().getX() - Constants.STATE_RADIUS,
+                    state.getPos().getY(), state, Color.yellow);
         }
     }
-    
+
     public static void drawState(Graphics g, State state) {
         if (state.isAccepted()) {
             drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS * 2 / 3, Color.WHITE);
@@ -205,7 +211,7 @@ public class Drawer {
         drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.WHITE);
         g.drawString(state.getName(), state.getPos().getX(), Constants.PANEL_HEIGHT - state.getPos().getY());
     }
-    
+
     public static void drawTransitions(Graphics g, List<Transition> transitions) {
         for (Transition transition : transitions) {
             drawTransition(g, transition);

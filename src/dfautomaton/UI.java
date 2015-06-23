@@ -22,20 +22,22 @@ import javax.swing.Timer;
  * @author Franco Montiel
  */
 public class UI extends JFrame implements ActionListener {
-    
+
     public enum DrawingState {
+
         Waiting, Drawing
     }
 
     public enum ModState {
+
         Creating, Editing, Transition
     }
-    
+
     public static DrawingState drawingState;
     public static ModState modState;
 
     private static Automaton automaton;
-    
+
     private JPanel panel;
     private JButton newState;
     private JButton newFState;
@@ -115,7 +117,7 @@ public class UI extends JFrame implements ActionListener {
         getContentPane().add(newState);
         getContentPane().add(newTransition);
         getContentPane().add(newFState);
-        
+
         doubleBuffer = new BufferedImage(Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
         start();
     }
@@ -125,11 +127,11 @@ public class UI extends JFrame implements ActionListener {
         comp.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         comp.setForeground(Color.WHITE);
     }
-    
+
     public void start() {
-		Timer timer = new Timer(1000/60, this);
-		timer.start();
-	}
+        Timer timer = new Timer(1000 / 60, this);
+        timer.start();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -140,13 +142,13 @@ public class UI extends JFrame implements ActionListener {
 
     private void paint() {
         dbg = doubleBuffer.getGraphics();
-        dbg.setColor(Color.BLACK);
+        dbg.setColor(Color.DARK_GRAY);
         dbg.fillRect(0, 0, Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT);
         Drawer.drawAutomaton(dbg, automaton);
         panel.getGraphics().drawImage(doubleBuffer, 0, 0, this);
         drawingState = DrawingState.Waiting;
     }
-    
+
     public static Automaton getAutomaton() {
         return automaton;
     }
