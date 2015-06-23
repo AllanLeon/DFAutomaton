@@ -9,6 +9,8 @@ import dfautomaton.model.basics.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Iterator;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
@@ -16,8 +18,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private State selectedState;
     private State startState;
     private State endState;
+    private Iterator iter;
+    private boolean found;
+    private JFrame parent;
 
-    public MouseHandler() {
+    public MouseHandler(JFrame parent) {
+        this.parent = parent;
         selectedState = null;
         startState = null;
         endState = null;
@@ -50,17 +56,38 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
         if (endState != null && startState != null) {
-            UI.getAutomaton().addTransition(new Transition(startState, 'a', endState));
+            Transition newTransition = new Transition(startState, endState);
+            UI.getAutomaton().addTransition(newTransition);
+            new TransitionSymbolDialog(parent, newTransition);
             reset();
             UI.drawingState = DrawingState.Drawing;
         }
     }
     
+    private void handleTransitionDeletion(Point clickedPoint) {
+        iter = UI.getAutomaton().getTransitions().iterator();
+        found = false;
+        Transition current;
+        while (iter.hasNext() && !found) {
+            current = (Transition) iter.next();
+            if (current.checkPointCollision(clickedPoint)) {
+                UI.getAutomaton().getTransitions().remove(current);
+                UI.drawingState = DrawingState.Drawing;
+                found = true;
+            }
+        }
+    }
+    
     private void handleStateDeletion(Point clickedPoint) {
-        for (State current : UI.getAutomaton().getStates()) {
+        iter = UI.getAutomaton().getStates().iterator();
+        found = false;
+        State current;
+        while (iter.hasNext() && !found) {
+            current = (State) iter.next();
             if (current.checkPointCollision(clickedPoint)) {
                 UI.getAutomaton().getStates().remove(current);
                 UI.drawingState = DrawingState.Drawing;
+                found = true;
             }
         }
     }
@@ -118,6 +145,8 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         } else if (UI.modState == ModState.Transition) {
             if (SwingUtilities.isLeftMouseButton(e)) {
                 handleTransitionCreation(clickedPoint);
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                handleTransitionDeletion(clickedPoint);
             }
         }
     }

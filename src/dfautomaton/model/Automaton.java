@@ -161,8 +161,10 @@ public class Automaton {
                 ok = false;
                 for (Transition transition : transitions) {
                     try {
-                        nextList.add(transition.execute(current));
-                        ok = true;
+                        for (Configuration newConf : transition.execute(current)) {
+                            nextList.add(newConf);
+                            ok = true;
+                        }
                     } catch (TransitionException ex) {
                         Logger.getLogger(Automaton.class.getName()).log(Level.SEVERE, null, ex);
                     }
