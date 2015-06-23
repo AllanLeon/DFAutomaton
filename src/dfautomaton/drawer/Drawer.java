@@ -141,12 +141,8 @@ public class Drawer {
 
     public static void drawArrow(Graphics g, int x0, int y0, int x1, int y1, State state, Color color) {
         g.setColor(color);
-        drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS - 10,
-                state.getPos().getY(), state.getPos().getX() - Constants.STATE_RADIUS,
-                state.getPos().getY(), color);
-        drawLine(g, state.getPos().getX() - Constants.STATE_RADIUS,
-                state.getPos().getY() - 10, state.getPos().getX() - Constants.STATE_RADIUS,
-                state.getPos().getY(), color);
+        drawLine(g, x1 - 10, y1, x1 , y1, color);
+        drawLine(g, x1, y1 - 10, x1, y1, color);
         drawLine(g, x0, y0, x1, y1, color);
     }
 
@@ -198,9 +194,9 @@ public class Drawer {
 
     public static void drawInitialStateArrow(Graphics g, State state) {
         if (state != null) {
-            drawArrow(g, state.getPos().getX() - Constants.STATE_RADIUS - 20,
-                    state.getPos().getY() - 20, state.getPos().getX() - Constants.STATE_RADIUS,
-                    state.getPos().getY(), state, Color.yellow);
+            drawArrow(g, state.getPos().getX() - Constants.STATE_RADIUS - 18,
+                    state.getPos().getY() - 30, state.getPos().getX() - Constants.STATE_RADIUS + 2,
+                    state.getPos().getY() - 10, state, Color.yellow);
         }
     }
 
