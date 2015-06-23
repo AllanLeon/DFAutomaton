@@ -79,6 +79,11 @@ public class Transition {
     }
     
     public boolean checkPointCollision(Point point) {
+        if (Math.abs(point.getDistanceTo(initialState.getPos()) +
+                point.getDistanceTo(nextState.getPos()) -
+                initialState.getPos().getDistanceTo(nextState.getPos())) < 0.5) {
+            return true;
+        }
         return false;
     }
 }
