@@ -6,8 +6,11 @@
 
 package dfautomaton.model;
 
-import dfautomaton.data.Constants;
 import dfautomaton.model.basics.Point;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -16,13 +19,20 @@ import dfautomaton.model.basics.Point;
 public class Transition {
     
     private State initialState;
-    private char symbol;
+    private Set<Character> symbols;
     private State nextState;
+    
+    public Transition(State initialState, State nextState) {
+        this.initialState = initialState;
+        this.symbols = new HashSet<>();
+        this.nextState = nextState;
+    }
 
     public Transition(State initialState, char symbol, State nextState) {
         this.initialState = initialState;
-        this.symbol = symbol;
+        this.symbols = new HashSet<>();
         this.nextState = nextState;
+        symbols.add(symbol);
     }
 
     /**
@@ -33,10 +43,14 @@ public class Transition {
     }
 
     /**
-     * @return the symbol
+     * @return the symbols
      */
-    public char getSymbol() {
-        return symbol;
+    public Set<Character> getSymbols() {
+        return symbols;
+    }
+    
+    public void addSymbol(Character symbol) {
+        symbols.add(symbol);
     }
 
     /**
@@ -54,10 +68,10 @@ public class Transition {
     }
 
     /**
-     * @param symbol the symbol to set
+     * @param symbols the symbols to set
      */
-    public void setSymbol(char symbol) {
-        this.symbol = symbol;
+    public void setSymbols(Set<Character> symbols) {
+        this.symbols = symbols;
     }
 
     /**
@@ -67,18 +81,28 @@ public class Transition {
         this.nextState = nextState;
     }
     
-    public Configuration execute(Configuration current) throws TransitionException {
-        if (!current.getWord().equals("")) {
-            if (current.getState().equals(initialState) && symbol == '\u03B5') {
-                return new Configuration(nextState, current.getWord());
-            } else if (current.getState().equals(initialState) && current.getWord().charAt(0) == symbol) {
-                return new Configuration(nextState, current.getWord().substring(1));
+    public List<Configuration> execute(Configuration current) throws TransitionException {
+        List<Configuration> nextConfigurations = new ArrayList<>();
+        if (current.getState().equals(initialState)) {    
+            for (Character symbol : symbols) {
+                if (!current.getWord().equals("")) {
+                    if (symbol == '\u03B5') {
+                        nextConfigurations.add(new Configuration(nextState, current.getWord()));
+                    } else if (current.getWord().charAt(0) == symbol) {
+                        nextConfigurations.add(new Configuration(nextState, current.getWord().substring(1)));
+                    }
+                }
             }
         }
-        throw new TransitionException("Transition not found");
+        return nextConfigurations;
     }
     
     public boolean checkPointCollision(Point point) {
+        if (Math.abs(point.getDistanceTo(initialState.getPos()) +
+                point.getDistanceTo(nextState.getPos()) -
+                initialState.getPos().getDistanceTo(nextState.getPos())) < 0.5) {
+            return true;
+        }
         return false;
     }
 }
