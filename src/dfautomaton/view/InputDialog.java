@@ -4,15 +4,12 @@
  * and open the template in the editor.
  */
 
-package dfautomaton;
+package dfautomaton.view;
 
-import dfautomaton.UI.DrawingState;
-import dfautomaton.model.Transition;
+import dfautomaton.model.Automaton;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -24,17 +21,16 @@ import javax.swing.border.EmptyBorder;
  *
  * @author Allan Leon
  */
-public class TransitionSymbolDialog extends JDialog {
+public class InputDialog extends JDialog {
     
     private JPanel contentPane;
     private JTextField textBox;
-    private JButton addBtn;
     private JButton okBtn;
-    private Transition transition;
+    private Automaton automaton;
     
-    public TransitionSymbolDialog(JFrame parent, Transition transition) {
+    public InputDialog(JFrame parent, Automaton automaton) {
         super(parent);
-        this.transition = transition;
+        this.automaton = automaton;
         initializeComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         pack(); 
@@ -58,26 +54,8 @@ public class TransitionSymbolDialog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (textBox.getText().length() == 0) {
-                    transition.addSymbol('\u03B5');
-                } else {
-                    transition.addSymbol(textBox.getText().charAt(0));
-                    textBox.setText("");
-                }
-            }
-        });
-        
-        addBtn = new JButton();
-        addBtn.setText("+");
-        addBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (textBox.getText().length() == 0) {
-                    transition.addSymbol('\u03B5');
-                } else {
-                    transition.addSymbol(textBox.getText().charAt(0));
-                    textBox.setText("");
-                }
+                dispose();
+                new ResultsFrame(automaton, textBox.getText());
             }
         });
         
@@ -86,20 +64,15 @@ public class TransitionSymbolDialog extends JDialog {
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (transition.getSymbols().size() > 0) {
-                    UI.drawingState = DrawingState.Drawing;
-                    setVisible(false);
-                    dispose();
-                }
+                dispose();
+                new ResultsFrame(automaton, textBox.getText());
             }
         });
         
-        textBox.setBounds(50, 30, 120, 30);
-        addBtn.setBounds(200, 30, 50, 30);
+        textBox.setBounds(50, 30, 150, 30);
         okBtn.setBounds(260, 30, 60, 30);
         
         contentPane.add(textBox);
-        contentPane.add(addBtn);
         contentPane.add(okBtn);
-    }
+    }    
 }
