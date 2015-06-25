@@ -6,8 +6,11 @@ import dfautomaton.model.Configuration;
 import dfautomaton.model.State;
 import dfautomaton.model.Transition;
 import dfautomaton.model.basics.Point;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.List;
 import java.util.Set;
 
@@ -140,9 +143,19 @@ public class Drawer {
         }
     }
 
-    public static void drawArrow(Graphics g, int x0, int y0, int x1, int y1, State state, Color color) {
+    public static void drawDashedCircle(Graphics g, int x0, int y0, Color color) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setColor(color);
+        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
+        g2d.setStroke(dashed);
+        g2d.drawOval(x0 + 6, Constants.PANEL_HEIGHT - y0 - Constants.STATE_RADIUS - 15, 20, 20);
+
+        g2d.dispose();
+    }
+
+    public static void drawArrow(Graphics g, int x0, int y0, int x1, int y1, Color color) {
         g.setColor(color);
-        drawLine(g, x1 - 10, y1, x1 , y1, color);
+        drawLine(g, x1 - 10, y1, x1, y1, color);
         drawLine(g, x1, y1 - 10, x1, y1, color);
         drawLine(g, x0, y0, x1, y1, color);
     }
@@ -188,21 +201,28 @@ public class Drawer {
     public static void drawTransition(Graphics g, Transition transition) {
         Point start = transition.getInitialState().getPos();
         Point end = transition.getNextState().getPos();
-        drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
         String transitionText = "";
         for (Character symbol : transition.getSymbols()) {
             transitionText += symbol + ",";
         }
         transitionText = transitionText.substring(0, transitionText.length() - 1);
-        g.drawString(transitionText, (start.getX() + end.getX()) / 2,
-                Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
+        g.setColor(Color.WHITE);
+        if (start.equals(end)) {
+            drawDashedCircle(g, start.getX(), start.getY(), Color.WHITE);
+            g.drawString(transitionText, start.getX() + Constants.STATE_RADIUS + 7,
+                    Constants.PANEL_HEIGHT - start.getY() - 35);
+        } else {
+            drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
+            g.drawString(transitionText, (start.getX() + end.getX()) / 2,
+                    Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
+        }
     }
 
     public static void drawInitialStateArrow(Graphics g, State state) {
         if (state != null) {
             drawArrow(g, state.getPos().getX() - Constants.STATE_RADIUS - 18,
                     state.getPos().getY() - 30, state.getPos().getX() - Constants.STATE_RADIUS + 2,
-                    state.getPos().getY() - 10, state, Color.yellow);
+                    state.getPos().getY() - 10, Color.yellow);
         }
     }
 
