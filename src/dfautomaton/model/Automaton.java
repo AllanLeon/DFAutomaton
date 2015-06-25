@@ -69,6 +69,10 @@ public class Automaton {
         return transitions;
     }
     
+    public List<List<Configuration>> getConfigurations() {
+        return configurations;
+    }
+    
     public int getCreatedStatesQuantity() {
         return createdStatesQuantity;
     }
@@ -138,6 +142,7 @@ public class Automaton {
     public void read(String word) {
         start(word);
         while (next()) {
+            System.out.println(configurations.size());
             for (Configuration current : configurations.get(currentIteration - 1)) {
                 System.out.printf("%s %s %b %b\n", current.getState().getName(),
                         current.getWord(), current.isDead(), current.isValid());
@@ -157,7 +162,7 @@ public class Automaton {
         List<Configuration> nextList = new ArrayList<>();
         boolean ok;
         for (Configuration current : configurations.get(currentIteration)) {
-            if (!current.isDead()) {
+            if (!current.isDead() || !current.isValid()) {
                 ok = false;
                 for (Transition transition : transitions) {
                     try {
@@ -171,12 +176,15 @@ public class Automaton {
                 }
                 if (!ok) {
                     current.setDead(true);
-                    nextList.add(current);
+                    //nextList.add(current);
                 }
             }
         }
-        configurations.add(nextList);
-        currentIteration++;
-        return nextList.size() > 0;
+        if (nextList.size() > 0) {
+            configurations.add(nextList);
+            currentIteration++;
+            return true;
+        }
+        return false;
     }
 }

@@ -1,5 +1,6 @@
-package dfautomaton;
+package dfautomaton.view;
 
+import dfautomaton.controller.MouseHandler;
 import dfautomaton.data.Constants;
 import dfautomaton.drawer.Drawer;
 import dfautomaton.model.Automaton;
@@ -21,7 +22,7 @@ import javax.swing.Timer;
  *
  * @author Franco Montiel
  */
-public class UI extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener {
 
     public enum DrawingState {
 
@@ -42,6 +43,7 @@ public class UI extends JFrame implements ActionListener {
     private JButton newState;
     private JButton newFState;
     private JButton newTransition;
+    private JButton input;
     private MouseHandler mouseHandler;
     private Graphics dbg;
     private BufferedImage doubleBuffer;
@@ -49,7 +51,7 @@ public class UI extends JFrame implements ActionListener {
     /**
      * Create the frame.
      */
-    public UI() {
+    public MainFrame() {
         automaton = new Automaton();
         drawingState = DrawingState.Drawing;
         modState = ModState.Creating;
@@ -108,15 +110,27 @@ public class UI extends JFrame implements ActionListener {
                 mouseHandler.reset();
             }
         });
+        
+        input = new JButton("Input");
+        setMaterialLNF(input);
+        input.setFocusable(false);
+        input.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                showInputDialog();
+            }
+        });
 
         newState.setBounds(Constants.WINDOW_WIDTH / 4 - 150, Constants.WINDOW_HEIGHT - 60, 100, 25);
         newTransition.setBounds(Constants.WINDOW_WIDTH / 4 - 40, Constants.WINDOW_HEIGHT - 60, 130, 25);
         newFState.setBounds(Constants.WINDOW_WIDTH / 2 - 100, Constants.WINDOW_HEIGHT - 60, 130, 25);
+        input.setBounds(Constants.WINDOW_WIDTH / 2 + 50, Constants.WINDOW_HEIGHT - 60, 130, 25);
 
         getContentPane().add(panel);
         getContentPane().add(newState);
         getContentPane().add(newTransition);
         getContentPane().add(newFState);
+        getContentPane().add(input);
 
         doubleBuffer = new BufferedImage(Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
         start();
@@ -151,5 +165,9 @@ public class UI extends JFrame implements ActionListener {
 
     public static Automaton getAutomaton() {
         return automaton;
+    }
+    
+    private void showInputDialog() {
+        new InputDialog(this, automaton);
     }
 }
