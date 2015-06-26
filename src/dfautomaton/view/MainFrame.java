@@ -170,6 +170,9 @@ public class MainFrame extends JFrame implements ActionListener {
     
     private void showInputDialog() {
         try {
+            if (!automaton.checkReachableStates()) {
+                new ReachableStatesDialog(this, automaton);
+            }
             automaton.validate();
             new InputDialog(this, automaton);
         } catch (AutomatonException ex) {

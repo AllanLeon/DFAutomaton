@@ -44,7 +44,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     }
 
     private void handleStateCreation(Point clickedPoint) {
-        MainFrame.getAutomaton().addState(new State(String.format("q%d", MainFrame.getAutomaton().getCreatedStatesQuantity()), false, clickedPoint));
+        MainFrame.getAutomaton().createState(clickedPoint);
         MainFrame.drawingState = DrawingState.Drawing;
     }
     
@@ -58,20 +58,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
         if (endState != null && startState != null) {
-            int i = 0;
-            Transition newTransition = null;
-            while (i < MainFrame.getAutomaton().getTransitions().size() && newTransition == null) {
-                if (MainFrame.getAutomaton().getTransitions().get(i).getInitialState() == startState &&
-                    MainFrame.getAutomaton().getTransitions().get(i).getNextState() == endState) {
-                    newTransition = MainFrame.getAutomaton().getTransitions().get(i);
-                }
-                i++;
-            }
-            if (newTransition == null) {
-                newTransition = new Transition(startState, endState);
-                MainFrame.getAutomaton().addTransition(newTransition);
-            }
-            new TransitionSymbolDialog(parent, newTransition);
+            new TransitionSymbolDialog(parent, MainFrame.getAutomaton().createTransition(startState, endState));
             reset();
             MainFrame.drawingState = DrawingState.Drawing;
         }
@@ -84,7 +71,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         while (iter.hasNext() && !found) {
             current = (Transition) iter.next();
             if (current.checkPointCollision(clickedPoint)) {
-                MainFrame.getAutomaton().getTransitions().remove(current);
+                MainFrame.getAutomaton().removeTransition(current);
                 MainFrame.drawingState = DrawingState.Drawing;
                 found = true;
             }
@@ -94,28 +81,13 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private void handleStateDeletion(Point clickedPoint) {
         iter = MainFrame.getAutomaton().getStates().iterator();
         found = false;
-        State current = null;
-        Transition currentTransition;
-        int i = 0;
+        State current;
         while (iter.hasNext() && !found) {
             current = (State) iter.next();
             if (current.checkPointCollision(clickedPoint)) {
-                MainFrame.getAutomaton().getStates().remove(current);
+                MainFrame.getAutomaton().removeState(current);
                 MainFrame.drawingState = DrawingState.Drawing;
                 found = true;
-            }
-        }
-        if (found) {
-            if (MainFrame.getAutomaton().getInitialState() == current) {
-                MainFrame.getAutomaton().setInitialState(null);
-            }
-            while (i < MainFrame.getAutomaton().getTransitions().size()) {
-                currentTransition = MainFrame.getAutomaton().getTransitions().get(i);
-                if (currentTransition.getInitialState() == current || currentTransition.getNextState() == current) {
-                    MainFrame.getAutomaton().getTransitions().remove(i);
-                } else {
-                    i++;
-                }
             }
         }
     }

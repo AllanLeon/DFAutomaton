@@ -6,8 +6,12 @@
 
 package dfautomaton.model;
 
+import dfautomaton.model.basics.Point;
+import dfautomaton.view.MainFrame;
+import dfautomaton.view.MainFrame.DrawingState;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -24,6 +28,7 @@ public class Automaton {
     private Set<State> acceptedStates;
     private List<Transition> transitions;
     private List<Set<Configuration>> configurations;
+    private Set<State> reachableStates;
     private State initialState;
     private int createdStatesQuantity;
     
@@ -31,6 +36,7 @@ public class Automaton {
         states = new HashSet<>();
         alphabet = new HashSet<>();
         acceptedStates = new HashSet<>();
+        reachableStates = new LinkedHashSet<>();
         transitions = new ArrayList<>();
         initialState = null;
         configurations = new ArrayList<>();
@@ -100,6 +106,27 @@ public class Automaton {
         alphabet.add(symbol);
     }
     
+    public void createState(Point clickedPoint) {
+        addState(new State(String.format("q%d", createdStatesQuantity), false, clickedPoint));
+    }
+    
+    public Transition createTransition(State initial, State next) {
+        Transition newTransition = new Transition(initial, next);
+        int i = 0;
+        boolean found = false;
+        while (i < transitions.size() && !found) {
+            if (transitions.get(i).equals(newTransition)) {
+                newTransition = transitions.get(i);
+                found = true;
+            }
+            i++;
+        }
+        if (!found) {
+            addTransition(newTransition);
+        }
+        return newTransition;
+    }
+    
     public void addTransition(Transition transition) {
         transitions.add(transition);
     }
@@ -109,6 +136,14 @@ public class Automaton {
             initialState = null;
         }
         states.remove(state);
+        int i = 0;
+        while (i < transitions.size()) {
+            if (transitions.get(i).getInitialState().equals(state) || transitions.get(i).getNextState().equals(state)) {
+                transitions.remove(i);
+            } else {
+                i++;
+            }
+        }
     }
     
     public void removeAcceptedState(State state) {
@@ -175,5 +210,31 @@ public class Automaton {
         } else if (!checkAcceptedStates()) {
             throw new AutomatonException("Debe existir por lo menos un estado aceptado");
         }
+    }
+    
+    public boolean checkReachableStates() {
+        reachableStates.clear();
+        reachableStates.add(initialState);
+        for (State current : reachableStates) {
+            for (Transition transition : transitions) {
+                if (transition.getInitialState().equals(current)) {
+                    reachableStates.add(transition.getNextState());
+                }
+            }
+        }
+        return reachableStates.size() == states.size();
+   }
+    
+    public void removeUnreachableStates() {
+        Set<State> unreachableStates = new HashSet<>();
+        for (State current : states) {
+            if (!reachableStates.contains(current)) {
+                unreachableStates.add(current);
+            }
+        }
+        for (State current : unreachableStates) {
+            removeState(current);
+        }
+        MainFrame.drawingState = DrawingState.Drawing;
     }
 }
