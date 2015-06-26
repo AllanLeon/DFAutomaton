@@ -23,10 +23,8 @@ public class Automaton {
     private Set<Character> alphabet;
     private Set<State> acceptedStates;
     private List<Transition> transitions;
-    private List<List<Configuration>> configurations;
-    //private String currentWord;
+    private List<Set<Configuration>> configurations;
     private State initialState;
-    private int currentIteration;
     private int createdStatesQuantity;
     
     public Automaton() {
@@ -36,9 +34,7 @@ public class Automaton {
         transitions = new ArrayList<>();
         initialState = null;
         configurations = new ArrayList<>();
-        currentIteration = 0;
         createdStatesQuantity = 0;
-        //currentWord = "";
     }
 
     public Set<State> getStates() {
@@ -69,7 +65,7 @@ public class Automaton {
         return transitions;
     }
     
-    public List<List<Configuration>> getConfigurations() {
+    public List<Set<Configuration>> getConfigurations() {
         return configurations;
     }
     
@@ -89,14 +85,6 @@ public class Automaton {
         this.initialState = initialState;
     }
     
-    public int getCurrentIteration() {
-        return currentIteration;
-    }
-    
-    public void setCurrentIteration(int next) {
-        currentIteration = next;
-    }
-    
     public void addState(State state) {
         states.add(state);
         createdStatesQuantity++;
@@ -113,11 +101,7 @@ public class Automaton {
     }
     
     public void addTransition(Transition transition) {
-        //if (states.contains(transition.getInitialState()) &&
-        //    states.contains(transition.getNextState()) &&
-        //    alphabet.contains(transition.getSymbol())) {
-            transitions.add(transition);
-        //}
+        transitions.add(transition);
     }
     
     public void removeState(State state) {
@@ -139,35 +123,17 @@ public class Automaton {
         transitions.remove(transition);
     }
     
-    /*public void read(String word) {
-        start(word);
-        while (next()) {
-            System.out.println(configurations.size());
-            for (Configuration current : configurations.get(currentIteration - 1)) {
-                System.out.printf("%s %s %b %b\n", current.getState().getName(),
-                        current.getWord(), current.isDead(), current.isValid());
-            }
-        }
-    }*/
-    
-    public void start(String word) throws AutomatonException {
-        if (initialState == null) {
-            throw new AutomatonException("No existe estado inicial");
-        } else if (!checkAcceptedStates()) {
-            throw new AutomatonException("Debe existir por lo menos un estado aceptado");
-        } else {
-            configurations.clear();
-            currentIteration = 0;
-            List<Configuration> startList = new ArrayList<>();
-            startList.add(new Configuration(initialState, word));
-            configurations.add(startList);
-        }
+    public void start(String word) {
+        configurations.clear();
+        Set<Configuration> startList = new HashSet<>();
+        startList.add(new Configuration(initialState, word));
+        configurations.add(startList);
     }
     
     public boolean next() {
-        List<Configuration> nextList = new ArrayList<>();
+        Set<Configuration> nextList = new HashSet<>();
         boolean ok;
-        for (Configuration current : configurations.get(currentIteration)) {
+        for (Configuration current : configurations.get(0)) {
             if (!current.isDead() && !current.isValid()) {
                 ok = false;
                 for (Transition transition : transitions) {
@@ -188,7 +154,7 @@ public class Automaton {
         }
         if (nextList.size() > 0) {
             configurations.add(nextList);
-            currentIteration++;
+            configurations.remove(0);
             return true;
         }
         return false;
@@ -201,5 +167,13 @@ public class Automaton {
             }
         }
         return false;
+    }
+    
+    public void validate() throws AutomatonException {
+        if (initialState == null) {
+            throw new AutomatonException("No existe estado inicial");
+        } else if (!checkAcceptedStates()) {
+            throw new AutomatonException("Debe existir por lo menos un estado aceptado");
+        }
     }
 }

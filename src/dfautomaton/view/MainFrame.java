@@ -4,7 +4,7 @@ import dfautomaton.controller.MouseHandler;
 import dfautomaton.data.Constants;
 import dfautomaton.drawer.Drawer;
 import dfautomaton.model.Automaton;
-import dfautomaton.model.State;
+import dfautomaton.model.AutomatonException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -136,7 +137,7 @@ public class MainFrame extends JFrame implements ActionListener {
         start();
     }
 
-    public void setMaterialLNF(Component comp) {
+    public static void setMaterialLNF(Component comp) {
         comp.setBackground(Color.BLACK);
         comp.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         comp.setForeground(Color.WHITE);
@@ -168,6 +169,11 @@ public class MainFrame extends JFrame implements ActionListener {
     }
     
     private void showInputDialog() {
-        new InputDialog(this, automaton);
+        try {
+            automaton.validate();
+            new InputDialog(this, automaton);
+        } catch (AutomatonException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

@@ -6,6 +6,8 @@
 
 package dfautomaton.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author Allan Leon
@@ -70,6 +72,32 @@ public class Configuration {
     
     public boolean isValid() {
         return word.length() == 0 && state.isAccepted();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.state);
+        hash = 59 * hash + Objects.hashCode(this.word);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Configuration other = (Configuration) obj;
+        if (!Objects.equals(this.state, other.state)) {
+            return false;
+        }
+        if (!Objects.equals(this.word, other.word)) {
+            return false;
+        }
+        return true;
     }
 }
  
