@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dfautomaton.view;
 
 import dfautomaton.model.Automaton;
@@ -39,7 +33,7 @@ public class InputDialog extends JDialog {
     }
     
     private void initializeComponents() {
-        setTitle("Entrada");
+        setTitle("Input Test");
         setPreferredSize(new Dimension(350, 100));
         setResizable(false);
         setLocationRelativeTo(null);

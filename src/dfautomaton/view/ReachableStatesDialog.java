@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dfautomaton.view;
 
 import dfautomaton.model.Automaton;
@@ -40,7 +34,7 @@ public class ReachableStatesDialog extends JDialog {
     }
     
     private void initializeComponents() {
-        setTitle("Existen estados inalcanzables");
+        setTitle("Unreacheable states...");
         setPreferredSize(new Dimension(390, 120));
         setResizable(false);
         setLocationRelativeTo(null);
@@ -71,9 +65,9 @@ public class ReachableStatesDialog extends JDialog {
             }
         });
         
-        textLbl.setBounds(5, 5, 380, 30);
-        yesBtn.setBounds(50, 40, 100, 30);
-        noBtn.setBounds(200, 40, 100, 30);
+        textLbl.setBounds(20, 5, 380, 30);
+        yesBtn.setBounds(60, 40, 100, 30);
+        noBtn.setBounds(210, 40, 100, 30);
         
         contentPane.add(textLbl);
         contentPane.add(yesBtn);

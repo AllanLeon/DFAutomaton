@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dfautomaton.model;
 
 import dfautomaton.model.basics.Point;
@@ -206,9 +200,9 @@ public class Automaton {
     
     public void validate() throws AutomatonException {
         if (initialState == null) {
-            throw new AutomatonException("No existe estado inicial");
+            throw new AutomatonException("No initial state found.");
         } else if (!checkAcceptedStates()) {
-            throw new AutomatonException("Debe existir por lo menos un estado aceptado");
+            throw new AutomatonException("Must exist at least one accepted state.");
         }
     }
     

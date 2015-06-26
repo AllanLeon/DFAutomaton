@@ -149,7 +149,6 @@ public class Drawer {
         Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{3}, 0);
         g2d.setStroke(dashed);
         g2d.drawOval(x0 + 6, Constants.PANEL_HEIGHT - y0 - Constants.STATE_RADIUS - 15, 20, 20);
-
         g2d.dispose();
     }
 
@@ -203,12 +202,14 @@ public class Drawer {
         Point end = transition.getNextState().getPos();
         if (start.equals(end)) {
             drawDashedCircle(g, start.getX(), start.getY(), Color.WHITE);
+            g.setColor(Color.YELLOW);
             g.drawString(transition.getTransitionText(), start.getX() + Constants.STATE_RADIUS + 7,
                     Constants.PANEL_HEIGHT - start.getY() - 35);
         } else {
             drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
+            g.setColor(Color.YELLOW);
             g.drawString(transition.getTransitionText(), (start.getX() + end.getX()) / 2,
-                    Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2));
+                    Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2) - 5);
         }
     }
 
@@ -216,15 +217,16 @@ public class Drawer {
         if (state != null) {
             drawArrow(g, state.getPos().getX() - Constants.STATE_RADIUS - 18,
                     state.getPos().getY() - 30, state.getPos().getX() - Constants.STATE_RADIUS + 2,
-                    state.getPos().getY() - 10, Color.yellow);
+                    state.getPos().getY() - 10, Color.YELLOW);
         }
-    }
+    } 
 
     public static void drawState(Graphics g, State state) {
         if (state.isAccepted()) {
             drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS * 2 / 3, Color.WHITE);
         }
         drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.WHITE);
+        g.setColor(Color.MAGENTA);
         g.drawString(state.getName(), state.getPos().getX(), Constants.PANEL_HEIGHT - state.getPos().getY());
     }
 
