@@ -48,6 +48,7 @@ public class ReachableStatesDialog extends JDialog {
         contentPane.setBackground(Color.BLACK);
 
         textLbl = new JLabel("Remove unreacheable states?");
+        textLbl.setForeground(Color.WHITE);
 
         yesBtn = new JButton("OK");
         setMaterialLNF(yesBtn);
@@ -61,7 +62,7 @@ public class ReachableStatesDialog extends JDialog {
             }
         });
 
-        noBtn = new JButton("Cancelar");
+        noBtn = new JButton("Cancel");
         setMaterialLNF(noBtn);
         noBtn.setFocusable(false);
         noBtn.addActionListener(new ActionListener() {

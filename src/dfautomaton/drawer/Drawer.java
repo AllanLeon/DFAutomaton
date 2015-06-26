@@ -220,7 +220,8 @@ public class Drawer {
     public static void drawTransition(Graphics g, Transition transition) {
         Point start = transition.getStartPos();
         Point end = transition.getEndPos();
-        if (start.equals(end)) {
+        if (start.getX() == end.getX() && start.getY() == end.getY()) {
+            start = transition.getInitialState().getPos();
             drawDashedCircle(g, start.getX(), start.getY(), Color.WHITE);
             g.setColor(Color.YELLOW);
             g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
