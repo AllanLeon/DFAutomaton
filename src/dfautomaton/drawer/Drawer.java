@@ -218,8 +218,8 @@ public class Drawer {
     }
 
     public static void drawTransition(Graphics g, Transition transition) {
-        Point start = transition.getInitialState().getPos();
-        Point end = transition.getNextState().getPos();
+        Point start = transition.getStartPos();
+        Point end = transition.getEndPos();
         if (start.equals(end)) {
             drawDashedCircle(g, start.getX(), start.getY(), Color.WHITE);
             g.setColor(Color.YELLOW);

@@ -47,11 +47,12 @@ public class ReachableStatesDialog extends JDialog {
         contentPane.setLayout(null);
         contentPane.setBackground(Color.BLACK);
 
-        textLbl = new JLabel("Delete unreacheable states?");
+        textLbl = new JLabel("Remove unreacheable states?");
 
         yesBtn = new JButton("OK");
         setMaterialLNF(yesBtn);
         yesBtn.setFocusable(false);
+
         yesBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -207,10 +207,10 @@ public class Automaton {
     
     public boolean checkReachableStates() {
         reachableStates.clear();
-        reachableStates.add(initialState);
         if (states.isEmpty()) {
             return true;
         }
+        reachableStates.add(initialState);
         for (int i = 0; i < reachableStates.size(); i++) {
             for (Transition transition : transitions) {
                 if (transition.getInitialState().equals(reachableStates.get(i))) {
@@ -234,5 +234,11 @@ public class Automaton {
             removeState(current);
         }
         MainFrame.drawingState = DrawingState.Drawing;
+    }
+    
+    public void updateTransitions() {
+        for (Transition current : transitions) {
+            current.calculatePos();
+        }
     }
 }

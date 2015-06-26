@@ -110,6 +110,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         if (selectedState != null) {
             selectedState.getPos().setX(draggedPoint.getX());
             selectedState.getPos().setY(draggedPoint.getY());
+            MainFrame.getAutomaton().updateTransitions();
             MainFrame.drawingState = DrawingState.Drawing;
         }
     }
