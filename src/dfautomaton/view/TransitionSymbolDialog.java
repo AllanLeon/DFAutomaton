@@ -11,11 +11,10 @@ import dfautomaton.model.Transition;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -30,13 +29,15 @@ public class TransitionSymbolDialog extends JDialog {
     private JTextField textBox;
     private JButton addBtn;
     private JButton okBtn;
+    private JButton xBtn;
+    private JLabel symbols;
     private Transition transition;
     
     public TransitionSymbolDialog(JFrame parent, Transition transition) {
         super(parent);
         this.transition = transition;
         initializeComponents();
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         pack(); 
         setModal(true);
         setVisible(true);
@@ -44,7 +45,7 @@ public class TransitionSymbolDialog extends JDialog {
     
     private void initializeComponents() {
         setTitle("");
-        setPreferredSize(new Dimension(350, 100));
+        setPreferredSize(new Dimension(350, 130));
         setResizable(false);
         setLocationRelativeTo(null);
         
@@ -58,12 +59,7 @@ public class TransitionSymbolDialog extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                if (textBox.getText().length() == 0) {
-                    transition.addSymbol('\u03B5');
-                } else {
-                    transition.addSymbol(textBox.getText().charAt(0));
-                    textBox.setText("");
-                }
+                addSymbol();
             }
         });
         
@@ -72,12 +68,7 @@ public class TransitionSymbolDialog extends JDialog {
         addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (textBox.getText().length() == 0) {
-                    transition.addSymbol('\u03B5');
-                } else {
-                    transition.addSymbol(textBox.getText().charAt(0));
-                    textBox.setText("");
-                }
+                addSymbol();
             }
         });
         
@@ -87,19 +78,49 @@ public class TransitionSymbolDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (transition.getSymbols().size() > 0) {
-                    MainFrame.drawingState = DrawingState.Drawing;
-                    setVisible(false);
+                    //MainFrame.drawingState = DrawingState.Drawing;
+                    //setVisible(false);
                     dispose();
                 }
             }
         });
         
-        textBox.setBounds(50, 30, 120, 30);
+        xBtn = new JButton();
+        xBtn.setText("X");
+        xBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeTransition();
+            }
+        });
+        
+        symbols = new JLabel(transition.getTransitionText());
+        
+        textBox.setBounds(70, 30, 100, 30);
         addBtn.setBounds(200, 30, 50, 30);
         okBtn.setBounds(260, 30, 60, 30);
+        xBtn.setBounds(10, 30, 50, 30);
+        symbols.setBounds(10, 80, 350, 20);
         
         contentPane.add(textBox);
         contentPane.add(addBtn);
         contentPane.add(okBtn);
+        contentPane.add(xBtn);
+        contentPane.add(symbols);
+    }
+    
+    private void addSymbol() {
+        if (textBox.getText().length() == 0) {
+            transition.addSymbol('\u03B5');
+        } else {
+            transition.addSymbol(textBox.getText().charAt(0));
+            textBox.setText("");
+        }
+        symbols.setText(transition.getTransitionText());
+    }
+    
+    private void removeTransition() {
+        MainFrame.getAutomaton().getTransitions().remove(transition);
+        dispose();
     }
 }

@@ -105,4 +105,17 @@ public class Transition {
         }
         return false;
     }
+    
+    public String getTransitionText() {
+        if (symbols.isEmpty()) {
+            return "";
+        } else {
+            String transitionText = "";
+            for (Character symbol : symbols) {
+                transitionText += symbol + ",";
+            }
+            transitionText = transitionText.substring(0, transitionText.length() - 1);
+            return transitionText;
+        }
+    }
 }

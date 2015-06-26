@@ -58,8 +58,19 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
             }
         }
         if (endState != null && startState != null) {
-            Transition newTransition = new Transition(startState, endState);
-            MainFrame.getAutomaton().addTransition(newTransition);
+            int i = 0;
+            Transition newTransition = null;
+            while (i < MainFrame.getAutomaton().getTransitions().size() && newTransition == null) {
+                if (MainFrame.getAutomaton().getTransitions().get(i).getInitialState() == startState &&
+                    MainFrame.getAutomaton().getTransitions().get(i).getNextState() == endState) {
+                    newTransition = MainFrame.getAutomaton().getTransitions().get(i);
+                }
+                i++;
+            }
+            if (newTransition == null) {
+                newTransition = new Transition(startState, endState);
+                MainFrame.getAutomaton().addTransition(newTransition);
+            }
             new TransitionSymbolDialog(parent, newTransition);
             reset();
             MainFrame.drawingState = DrawingState.Drawing;
@@ -83,13 +94,28 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     private void handleStateDeletion(Point clickedPoint) {
         iter = MainFrame.getAutomaton().getStates().iterator();
         found = false;
-        State current;
+        State current = null;
+        Transition currentTransition;
+        int i = 0;
         while (iter.hasNext() && !found) {
             current = (State) iter.next();
             if (current.checkPointCollision(clickedPoint)) {
                 MainFrame.getAutomaton().getStates().remove(current);
                 MainFrame.drawingState = DrawingState.Drawing;
                 found = true;
+            }
+        }
+        if (found) {
+            if (MainFrame.getAutomaton().getInitialState() == current) {
+                MainFrame.getAutomaton().setInitialState(null);
+            }
+            while (i < MainFrame.getAutomaton().getTransitions().size()) {
+                currentTransition = MainFrame.getAutomaton().getTransitions().get(i);
+                if (currentTransition.getInitialState() == current || currentTransition.getNextState() == current) {
+                    MainFrame.getAutomaton().getTransitions().remove(i);
+                } else {
+                    i++;
+                }
             }
         }
     }
