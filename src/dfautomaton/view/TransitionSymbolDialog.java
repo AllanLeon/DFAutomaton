@@ -6,7 +6,6 @@
 
 package dfautomaton.view;
 
-import dfautomaton.view.MainFrame.DrawingState;
 import dfautomaton.model.Transition;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
