@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dfautomaton.view;
 
 import dfautomaton.data.Constants;
 import dfautomaton.model.Automaton;
 import dfautomaton.model.Configuration;
+import static dfautomaton.view.MainFrame.setMaterialLNF;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -53,8 +48,9 @@ public class ResultsFrame extends JFrame {
         scroll.setBackground(Color.DARK_GRAY);
         scroll.setBounds(2, 0, Constants.RESULTS_WIDTH, Constants.RESULTS_HEIGHT);
         
-        stepBtn = new JButton();
-        stepBtn.setText(">>>>>>>>");
+        stepBtn = new JButton(">>>>>>>>");
+        stepBtn.setFocusable(false);
+        setMaterialLNF(stepBtn);
         stepBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

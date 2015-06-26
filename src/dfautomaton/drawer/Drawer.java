@@ -9,6 +9,7 @@ import dfautomaton.model.Transition;
 import dfautomaton.model.basics.Point;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
@@ -21,7 +22,7 @@ import java.util.Set;
  * @author Allan Leon
  */
 public class Drawer {
-    
+
     private static final int ARR_SIZE = 5;
 
     private static void putPixel(Graphics g, int x, int y) {
@@ -189,21 +190,21 @@ public class Drawer {
             simetry(g, x, y, centerX, centerY);
         }
     }
-    
+
     private static void drawArrow(Graphics g1, Point p1, Point p2) {
-                Graphics2D g = (Graphics2D) g1.create();
-                int y1 = Constants.PANEL_HEIGHT - p1.getY();
-                int y2 = Constants.PANEL_HEIGHT - p2.getY();
-                double dx = p2.getX() - p1.getX();
-                double dy = y2 - y1;
-                double angle = Math.atan2(dy, dx);
-                int len = (int) Math.sqrt(dx*dx + dy*dy);
-                AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), y1);
-                at.concatenate(AffineTransform.getRotateInstance(angle));
-                g.transform(at);
-                g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
-                              new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
-            }
+        Graphics2D g = (Graphics2D) g1.create();
+        int y1 = Constants.PANEL_HEIGHT - p1.getY();
+        int y2 = Constants.PANEL_HEIGHT - p2.getY();
+        double dx = p2.getX() - p1.getX();
+        double dy = y2 - y1;
+        double angle = Math.atan2(dy, dx);
+        int len = (int) Math.sqrt(dx * dx + dy * dy);
+        AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), y1);
+        at.concatenate(AffineTransform.getRotateInstance(angle));
+        g.transform(at);
+        g.fillPolygon(new int[]{len, len - ARR_SIZE, len - ARR_SIZE, len},
+                new int[]{0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+    }
 
     private static void simetry(Graphics g, int x, int y, int centerX, int centerY) {
         putPixel(g, x + centerX, y + centerY);
@@ -222,12 +223,14 @@ public class Drawer {
         if (start.equals(end)) {
             drawDashedCircle(g, start.getX(), start.getY(), Color.WHITE);
             g.setColor(Color.YELLOW);
+            g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             g.drawString(transition.getTransitionText(), start.getX() + Constants.STATE_RADIUS + 7,
                     Constants.PANEL_HEIGHT - start.getY() - 35);
         } else {
             drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
             drawArrow(g, start, end);
             g.setColor(Color.YELLOW);
+            g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
             g.drawString(transition.getTransitionText(), (start.getX() + end.getX()) / 2,
                     Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2) - 5);
         }
@@ -239,7 +242,7 @@ public class Drawer {
                     state.getPos().getY() - 30, state.getPos().getX() - Constants.STATE_RADIUS + 2,
                     state.getPos().getY() - 10, Color.YELLOW);
         }
-    } 
+    }
 
     public static void drawState(Graphics g, State state) {
         if (state.isAccepted()) {
@@ -252,8 +255,11 @@ public class Drawer {
         } else if (state.getType() == StateType.END) {
             drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.ORANGE);
         }
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(state.getPos().getX() - 6, Constants.PANEL_HEIGHT - state.getPos().getY() - 8, 15, 15);
         g.setColor(Color.MAGENTA);
-        g.drawString(state.getName(), state.getPos().getX(), Constants.PANEL_HEIGHT - state.getPos().getY());
+        g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        g.drawString(state.getName(), state.getPos().getX() - 5, Constants.PANEL_HEIGHT - state.getPos().getY() + 3);
     }
 
     public static void drawTransitions(Graphics g, List<Transition> transitions) {
@@ -269,16 +275,17 @@ public class Drawer {
     }
 
     public static void drawAutomaton(Graphics g, Automaton automaton) {
+        drawTransitions(g, automaton.getTransitions());
         drawStates(g, automaton.getStates());
         drawInitialStateArrow(g, automaton.getInitialState());
-        drawTransitions(g, automaton.getTransitions());
     }
-    
+
     public static void drawConfiguration(Graphics g, Configuration conf) {
         g.setColor(Color.BLACK);
         g.drawOval(Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2, Constants.STATE_RADIUS, Constants.STATE_RADIUS);
         System.out.printf("%d %d\n", Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2);
         //drawCircle(g, Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2, Constants.STATE_RADIUS, Color.BLACK);
+        g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         g.drawString(conf.getWord(), Constants.STATE_RADIUS * 2 + 5, Constants.CONFIGURATION_HEIGHT / 2);
     }
 }
