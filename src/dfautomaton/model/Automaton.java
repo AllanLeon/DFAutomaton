@@ -139,7 +139,7 @@ public class Automaton {
         transitions.remove(transition);
     }
     
-    public void read(String word) {
+    /*public void read(String word) {
         start(word);
         while (next()) {
             System.out.println(configurations.size());
@@ -148,21 +148,27 @@ public class Automaton {
                         current.getWord(), current.isDead(), current.isValid());
             }
         }
-    }
+    }*/
     
-    public void start(String word) {
-        configurations.clear();
-        currentIteration = 0;
-        List<Configuration> startList = new ArrayList<>();
-        startList.add(new Configuration(initialState, word));
-        configurations.add(startList);
+    public void start(String word) throws AutomatonException {
+        if (initialState == null) {
+            throw new AutomatonException("No existe estado inicial");
+        } else if (!checkAcceptedStates()) {
+            throw new AutomatonException("Debe existir por lo menos un estado aceptado");
+        } else {
+            configurations.clear();
+            currentIteration = 0;
+            List<Configuration> startList = new ArrayList<>();
+            startList.add(new Configuration(initialState, word));
+            configurations.add(startList);
+        }
     }
     
     public boolean next() {
         List<Configuration> nextList = new ArrayList<>();
         boolean ok;
         for (Configuration current : configurations.get(currentIteration)) {
-            if (!current.isDead() || !current.isValid()) {
+            if (!current.isDead() && !current.isValid()) {
                 ok = false;
                 for (Transition transition : transitions) {
                     try {
@@ -176,7 +182,7 @@ public class Automaton {
                 }
                 if (!ok) {
                     current.setDead(true);
-                    //nextList.add(current);
+                    nextList.add(current);
                 }
             }
         }
@@ -184,6 +190,15 @@ public class Automaton {
             configurations.add(nextList);
             currentIteration++;
             return true;
+        }
+        return false;
+    }
+    
+    private boolean checkAcceptedStates() {
+        for (State state : states) {
+            if (state.isAccepted()) {
+                return true;
+            }
         }
         return false;
     }

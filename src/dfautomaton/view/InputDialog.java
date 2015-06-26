@@ -7,12 +7,14 @@
 package dfautomaton.view;
 
 import dfautomaton.model.Automaton;
+import dfautomaton.model.AutomatonException;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -55,7 +57,7 @@ public class InputDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 dispose();
-                new ResultsFrame(automaton, textBox.getText());
+                execute();
             }
         });
         
@@ -64,8 +66,7 @@ public class InputDialog extends JDialog {
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
-                new ResultsFrame(automaton, textBox.getText());
+                execute();
             }
         });
         
@@ -74,5 +75,15 @@ public class InputDialog extends JDialog {
         
         contentPane.add(textBox);
         contentPane.add(okBtn);
-    }    
+    }
+    
+    private void execute() {
+        try {
+            automaton.start(textBox.getText());
+            dispose();
+            new ResultsFrame(automaton);
+        } catch (AutomatonException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
