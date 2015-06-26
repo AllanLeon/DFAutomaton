@@ -9,13 +9,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import javax.swing.JButton;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.Timer;
 
 /**
@@ -41,10 +47,10 @@ public class MainFrame extends JFrame implements ActionListener {
     private static Automaton automaton;
 
     private JPanel panel;
-    private JButton newState;
-    private JButton newFState;
-    private JButton newTransition;
-    private JButton input;
+    private JToggleButton stateTool;
+    private JToggleButton IFStateTool;
+    private JToggleButton transitionTool;
+    private JToggleButton input;
     private MouseHandler mouseHandler;
     private Graphics dbg;
     private BufferedImage doubleBuffer;
@@ -64,7 +70,15 @@ public class MainFrame extends JFrame implements ActionListener {
      * Initialize and set up the basic components of the frame.
      */
     private void initialize() {
-        setTitle("DFA");
+        setTitle("jFlop");
+        BufferedImage img;
+        try {
+            img = ImageIO.read(this.getClass().getResource("/dfautomaton/fsm.jpg"));
+            Image dimg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            setIconImage(dimg);
+        } catch (IOException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -79,40 +93,45 @@ public class MainFrame extends JFrame implements ActionListener {
         panel.addMouseListener(mouseHandler);
         panel.addMouseMotionListener(mouseHandler);
 
-        newState = new JButton("New State");
-        setMaterialLNF(newState);
-        newState.setFocusable(false);
-        newState.addActionListener(new ActionListener() {
+        ButtonGroup btnGroup = new ButtonGroup();
+
+        stateTool = new JToggleButton("State Tool");
+        setMaterialLNF(stateTool);
+        stateTool.setFocusable(false);
+        stateTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 modState = ModState.Creating;
                 mouseHandler.reset();
             }
         });
+        btnGroup.add(stateTool);
 
-        newTransition = new JButton("New Transition");
-        setMaterialLNF(newTransition);
-        newTransition.setFocusable(false);
-        newTransition.addActionListener(new ActionListener() {
+        transitionTool = new JToggleButton("Transition Tool");
+        setMaterialLNF(transitionTool);
+        transitionTool.setFocusable(false);
+        transitionTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 modState = ModState.Transition;
                 mouseHandler.reset();
             }
         });
+        btnGroup.add(transitionTool);
 
-        newFState = new JButton("New Final State");
-        setMaterialLNF(newFState);
-        newFState.setFocusable(false);
-        newFState.addActionListener(new ActionListener() {
+        IFStateTool = new JToggleButton("I/F State Tool");
+        setMaterialLNF(IFStateTool);
+        IFStateTool.setFocusable(false);
+        IFStateTool.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 modState = ModState.Editing;
                 mouseHandler.reset();
             }
         });
-        
-        input = new JButton("Input");
+        btnGroup.add(IFStateTool);
+
+        input = new JToggleButton("Input Test");
         setMaterialLNF(input);
         input.setFocusable(false);
         input.addActionListener(new ActionListener() {
@@ -121,16 +140,17 @@ public class MainFrame extends JFrame implements ActionListener {
                 showInputDialog();
             }
         });
+        btnGroup.add(input);
 
-        newState.setBounds(Constants.WINDOW_WIDTH / 4 - 150, Constants.WINDOW_HEIGHT - 60, 100, 25);
-        newTransition.setBounds(Constants.WINDOW_WIDTH / 4 - 40, Constants.WINDOW_HEIGHT - 60, 130, 25);
-        newFState.setBounds(Constants.WINDOW_WIDTH / 2 - 100, Constants.WINDOW_HEIGHT - 60, 130, 25);
+        stateTool.setBounds(Constants.WINDOW_WIDTH / 4 - 150, Constants.WINDOW_HEIGHT - 60, 100, 25);
+        transitionTool.setBounds(Constants.WINDOW_WIDTH / 4 - 40, Constants.WINDOW_HEIGHT - 60, 130, 25);
+        IFStateTool.setBounds(Constants.WINDOW_WIDTH / 2 - 100, Constants.WINDOW_HEIGHT - 60, 130, 25);
         input.setBounds(Constants.WINDOW_WIDTH / 2 + 50, Constants.WINDOW_HEIGHT - 60, 130, 25);
 
         getContentPane().add(panel);
-        getContentPane().add(newState);
-        getContentPane().add(newTransition);
-        getContentPane().add(newFState);
+        getContentPane().add(stateTool);
+        getContentPane().add(transitionTool);
+        getContentPane().add(IFStateTool);
         getContentPane().add(input);
 
         doubleBuffer = new BufferedImage(Constants.PANEL_WIDTH, Constants.PANEL_HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -167,7 +187,7 @@ public class MainFrame extends JFrame implements ActionListener {
     public static Automaton getAutomaton() {
         return automaton;
     }
-    
+
     private void showInputDialog() {
         try {
             automaton.validate();

@@ -43,7 +43,7 @@ public class TransitionSymbolDialog extends JDialog {
     }
     
     private void initializeComponents() {
-        setTitle("");
+        setTitle("Transition Input");
         setPreferredSize(new Dimension(350, 130));
         setResizable(false);
         setLocationRelativeTo(null);

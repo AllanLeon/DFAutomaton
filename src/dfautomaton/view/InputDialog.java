@@ -39,7 +39,7 @@ public class InputDialog extends JDialog {
     }
     
     private void initializeComponents() {
-        setTitle("");
+        setTitle("Input Test");
         setPreferredSize(new Dimension(350, 100));
         setResizable(false);
         setLocationRelativeTo(null);
