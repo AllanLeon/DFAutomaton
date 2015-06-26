@@ -8,9 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
  *
@@ -48,6 +52,7 @@ public class TransitionSymbolDialog extends JDialog {
         contentPane.setLayout(null);
         
         textBox = new JTextField();
+        textBox.setDocument(new JTextFieldLimit(1));
         textBox.addActionListener(new ActionListener() {
 
             @Override
@@ -71,9 +76,9 @@ public class TransitionSymbolDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (transition.getSymbols().size() > 0) {
-                    //MainFrame.drawingState = DrawingState.Drawing;
-                    //setVisible(false);
                     dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Transition doesn't contain any symbol!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -115,5 +120,31 @@ public class TransitionSymbolDialog extends JDialog {
     private void removeTransition() {
         MainFrame.getAutomaton().getTransitions().remove(transition);
         dispose();
+    }
+    
+    class JTextFieldLimit extends PlainDocument {
+        
+        private int limit;
+        
+        JTextFieldLimit(int limit) {
+            super();
+            this.limit = limit;
+        }
+
+        JTextFieldLimit(int limit, boolean upper) {
+            super();
+            this.limit = limit;
+        }
+
+        @Override
+        public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+            if (str == null) {
+                return;
+            }
+
+            if ((getLength() + str.length()) <= limit) {
+                super.insertString(offset, str, attr);
+            }
+        }
     }
 }

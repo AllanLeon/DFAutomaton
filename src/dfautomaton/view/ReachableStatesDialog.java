@@ -44,7 +44,7 @@ public class ReachableStatesDialog extends JDialog {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        textLbl = new JLabel("¿Desea eliminar los estados que no pueden ser alcanzados?");
+        textLbl = new JLabel("Remove unreachable states?");
         
         yesBtn = new JButton();
         yesBtn.setText("OK");
