@@ -3,16 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/controller/MouseHandler.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/drawer/Drawer.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/model/AutomatonException.java</file>
+            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/view/ConfigurationPanel.java</file>
             <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/view/MainFrame.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/view/ResultsFrame.java</file>
             <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/model/Automaton.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/test/dfautomaton/model/AutomatonTest.java</file>
             <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/view/InputDialog.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/model/Transition.java</file>
-            <file>file:/D:/UPB/Quinto%20Semestre/Automatas%20y%20Calculabilidad%201/DFAutomaton/src/dfautomaton/view/TransitionSymbolDialog.java</file>
         </group>
     </open-files>
 </project-private>
