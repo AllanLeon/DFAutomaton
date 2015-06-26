@@ -235,4 +235,10 @@ public class Automaton {
         }
         MainFrame.drawingState = DrawingState.Drawing;
     }
+    
+    public void updateTransitions() {
+        for (Transition current : transitions) {
+            current.calculatePos();
+        }
+    }
 }
