@@ -54,6 +54,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private MouseHandler mouseHandler;
     private Graphics dbg;
     private BufferedImage doubleBuffer;
+    private ButtonGroup btnGroup;
 
     /**
      * Create the frame.
@@ -93,7 +94,7 @@ public class MainFrame extends JFrame implements ActionListener {
         panel.addMouseListener(mouseHandler);
         panel.addMouseMotionListener(mouseHandler);
 
-        ButtonGroup btnGroup = new ButtonGroup();
+        btnGroup = new ButtonGroup();
 
         stateTool = new JToggleButton("State Tool");
         setMaterialLNF(stateTool);
@@ -145,7 +146,7 @@ public class MainFrame extends JFrame implements ActionListener {
         stateTool.setBounds(Constants.WINDOW_WIDTH / 4 - 150, Constants.WINDOW_HEIGHT - 60, 100, 25);
         transitionTool.setBounds(Constants.WINDOW_WIDTH / 4 - 40, Constants.WINDOW_HEIGHT - 60, 130, 25);
         IFStateTool.setBounds(Constants.WINDOW_WIDTH / 2 - 100, Constants.WINDOW_HEIGHT - 60, 130, 25);
-        input.setBounds(Constants.WINDOW_WIDTH / 2 + 50, Constants.WINDOW_HEIGHT - 60, 130, 25);
+        input.setBounds(Constants.WINDOW_WIDTH - 200, Constants.WINDOW_HEIGHT - 60, 130, 25);
 
         getContentPane().add(panel);
         getContentPane().add(stateTool);
@@ -160,7 +161,8 @@ public class MainFrame extends JFrame implements ActionListener {
     public static void setMaterialLNF(Component comp) {
         comp.setBackground(Color.BLACK);
         comp.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        comp.setForeground(Color.WHITE);
+        comp.setForeground(Color.BLUE);
+        
     }
 
     public void start() {
@@ -190,6 +192,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
     private void showInputDialog() {
         try {
+            if (!automaton.checkReachableStates()) {
+                new ReachableStatesDialog(this, automaton);
+            }
             automaton.validate();
             new InputDialog(this, automaton);
         } catch (AutomatonException ex) {

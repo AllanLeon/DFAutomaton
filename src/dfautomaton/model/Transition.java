@@ -10,6 +10,7 @@ import dfautomaton.model.basics.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -117,5 +118,31 @@ public class Transition {
             transitionText = transitionText.substring(0, transitionText.length() - 1);
             return transitionText;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + Objects.hashCode(this.initialState);
+        hash = 79 * hash + Objects.hashCode(this.nextState);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Transition other = (Transition) obj;
+        if (!Objects.equals(this.initialState, other.initialState)) {
+            return false;
+        }
+        if (!Objects.equals(this.nextState, other.nextState)) {
+            return false;
+        }
+        return true;
     }
 }
