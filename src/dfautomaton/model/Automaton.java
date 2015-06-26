@@ -208,6 +208,9 @@ public class Automaton {
     public boolean checkReachableStates() {
         reachableStates.clear();
         reachableStates.add(initialState);
+        if (states.isEmpty()) {
+            return true;
+        }
         for (int i = 0; i < reachableStates.size(); i++) {
             for (Transition transition : transitions) {
                 if (transition.getInitialState().equals(reachableStates.get(i))) {

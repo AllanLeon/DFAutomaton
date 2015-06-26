@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ import java.util.Set;
  * @author Allan Leon
  */
 public class Drawer {
+    
+    private static final int ARR_SIZE = 5;
 
     private static void putPixel(Graphics g, int x, int y) {
         g.drawLine(x, Constants.PANEL_HEIGHT - y, x, Constants.PANEL_HEIGHT - y);
@@ -186,6 +189,21 @@ public class Drawer {
             simetry(g, x, y, centerX, centerY);
         }
     }
+    
+    private static void drawArrow(Graphics g1, Point p1, Point p2) {
+                Graphics2D g = (Graphics2D) g1.create();
+                int y1 = Constants.PANEL_HEIGHT - p1.getY();
+                int y2 = Constants.PANEL_HEIGHT - p2.getY();
+                double dx = p2.getX() - p1.getX();
+                double dy = y2 - y1;
+                double angle = Math.atan2(dy, dx);
+                int len = (int) Math.sqrt(dx*dx + dy*dy);
+                AffineTransform at = AffineTransform.getTranslateInstance(p1.getX(), y1);
+                at.concatenate(AffineTransform.getRotateInstance(angle));
+                g.transform(at);
+                g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+                              new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
+            }
 
     private static void simetry(Graphics g, int x, int y, int centerX, int centerY) {
         putPixel(g, x + centerX, y + centerY);
@@ -208,6 +226,7 @@ public class Drawer {
                     Constants.PANEL_HEIGHT - start.getY() - 35);
         } else {
             drawDashedLine(g, start.getX(), start.getY(), end.getX(), end.getY(), Color.WHITE);
+            drawArrow(g, start, end);
             g.setColor(Color.YELLOW);
             g.drawString(transition.getTransitionText(), (start.getX() + end.getX()) / 2,
                     Constants.PANEL_HEIGHT - ((start.getY() + end.getY()) / 2) - 5);
