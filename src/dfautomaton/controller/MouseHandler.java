@@ -53,12 +53,17 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
         if (selectedState != null) {
             if (startState == null) {
                 startState = selectedState;
+                startState.setType(State.StateType.START);
             } else if (endState == null) {
                 endState = selectedState;
+                endState.setType(State.StateType.END);
             }
+            MainFrame.drawingState = DrawingState.Drawing;
         }
         if (endState != null && startState != null) {
             new TransitionSymbolDialog(parent, MainFrame.getAutomaton().createTransition(startState, endState));
+            startState.setType(State.StateType.NORMAL);
+            endState.setType(State.StateType.NORMAL);
             reset();
             MainFrame.drawingState = DrawingState.Drawing;
         }

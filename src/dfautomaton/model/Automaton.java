@@ -5,7 +5,6 @@ import dfautomaton.view.MainFrame;
 import dfautomaton.view.MainFrame.DrawingState;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -22,7 +21,7 @@ public class Automaton {
     private Set<State> acceptedStates;
     private List<Transition> transitions;
     private List<Set<Configuration>> configurations;
-    private Set<State> reachableStates;
+    private List<State> reachableStates;
     private State initialState;
     private int createdStatesQuantity;
     
@@ -30,7 +29,7 @@ public class Automaton {
         states = new HashSet<>();
         alphabet = new HashSet<>();
         acceptedStates = new HashSet<>();
-        reachableStates = new LinkedHashSet<>();
+        reachableStates = new ArrayList<>();
         transitions = new ArrayList<>();
         initialState = null;
         configurations = new ArrayList<>();
@@ -209,10 +208,12 @@ public class Automaton {
     public boolean checkReachableStates() {
         reachableStates.clear();
         reachableStates.add(initialState);
-        for (State current : reachableStates) {
+        for (int i = 0; i < reachableStates.size(); i++) {
             for (Transition transition : transitions) {
-                if (transition.getInitialState().equals(current)) {
-                    reachableStates.add(transition.getNextState());
+                if (transition.getInitialState().equals(reachableStates.get(i))) {
+                    if (!reachableStates.contains(transition.getNextState())) {
+                        reachableStates.add(transition.getNextState());
+                    }
                 }
             }
         }

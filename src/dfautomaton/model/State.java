@@ -16,20 +16,27 @@ import java.util.Objects;
  */
 public class State {
     
+    public enum StateType {
+        NORMAL, START, END
+    }
+    
     private String name;
     private boolean accepted;
     private Point pos;
+    private StateType type;
     
     public State(String name, boolean accepted) {
         this.name = name;
         this.accepted = accepted;
         this.pos = new Point(0, 0);
+        this.type = StateType.NORMAL;
     }
     
     public State(String name, boolean accepted, Point pos) {
         this.name = name;
         this.accepted = accepted;
         this.pos = pos;
+        this.type = StateType.NORMAL;
     }
 
     /**
@@ -76,6 +83,20 @@ public class State {
      */
     public void setPos(Point pos) {
         this.pos = pos;
+    }
+    
+    /**
+     * @return the type
+     */
+    public StateType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(StateType type) {
+        this.type = type;
     }
     
     public boolean checkPointCollision(Point point) {

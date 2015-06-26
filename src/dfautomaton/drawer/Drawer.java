@@ -4,6 +4,7 @@ import dfautomaton.data.Constants;
 import dfautomaton.model.Automaton;
 import dfautomaton.model.Configuration;
 import dfautomaton.model.State;
+import dfautomaton.model.State.StateType;
 import dfautomaton.model.Transition;
 import dfautomaton.model.basics.Point;
 import java.awt.BasicStroke;
@@ -225,7 +226,13 @@ public class Drawer {
         if (state.isAccepted()) {
             drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS * 2 / 3, Color.WHITE);
         }
-        drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.WHITE);
+        if (state.getType() == StateType.NORMAL) {
+            drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.WHITE);
+        } else if (state.getType() == StateType.START) {
+            drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.CYAN);
+        } else if (state.getType() == StateType.END) {
+            drawCircle(g, state.getPos().getX(), state.getPos().getY(), Constants.STATE_RADIUS, Color.ORANGE);
+        }
         g.setColor(Color.MAGENTA);
         g.drawString(state.getName(), state.getPos().getX(), Constants.PANEL_HEIGHT - state.getPos().getY());
     }
