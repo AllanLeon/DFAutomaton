@@ -1,5 +1,6 @@
 package dfautomaton.model;
 
+import dfautomaton.data.Constants;
 import dfautomaton.model.basics.Point;
 import dfautomaton.view.MainFrame;
 import dfautomaton.view.MainFrame.DrawingState;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +22,7 @@ public class Automaton {
     private Set<Character> alphabet;
     private Set<State> acceptedStates;
     private List<Transition> transitions;
-    private List<Set<Configuration>> configurations;
+    private List<Set<ConfigurationStack>> configurations;
     private List<State> reachableStates;
     private State initialState;
     private int createdStatesQuantity;
@@ -64,7 +66,7 @@ public class Automaton {
         return transitions;
     }
     
-    public List<Set<Configuration>> getConfigurations() {
+    public List<Set<ConfigurationStack>> getConfigurations() {
         return configurations;
     }
     
@@ -153,20 +155,22 @@ public class Automaton {
     
     public void start(String word) {
         configurations.clear();
-        Set<Configuration> startList = new HashSet<>();
-        startList.add(new Configuration(initialState, word));
+        Set<ConfigurationStack> startList = new HashSet<>();
+        Stack<Character> startStack = new Stack<>();
+        startStack.add(Constants.DZETA);
+        startList.add(new ConfigurationStack(initialState, word, startStack));
         configurations.add(startList);
     }
     
     public boolean next() {
-        Set<Configuration> nextList = new HashSet<>();
+        Set<ConfigurationStack> nextList = new HashSet<>();
         boolean ok;
-        for (Configuration current : configurations.get(0)) {
+        for (ConfigurationStack current : configurations.get(0)) {
             if (!current.isDead() && !current.isValid()) {
                 ok = false;
                 for (Transition transition : transitions) {
                     try {
-                        for (Configuration newConf : transition.execute(current)) {
+                        for (ConfigurationStack newConf : transition.executeWithStack(current)) {
                             nextList.add(newConf);
                             ok = true;
                         }
