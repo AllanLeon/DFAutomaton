@@ -3,6 +3,8 @@ package dfautomaton.view;
 import dfautomaton.data.Constants;
 import dfautomaton.model.Transition;
 import dfautomaton.model.TransitionInfo;
+import static dfautomaton.view.MainFrame.setMaterialLNF;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -26,7 +28,7 @@ import javax.swing.text.PlainDocument;
  * @author Allan Leon
  */
 public class TransitionSymbolDialog extends JDialog {
-    
+
     private JPanel contentPane;
     private JTextField symbolBox;
     private JTextField topBox;
@@ -40,32 +42,32 @@ public class TransitionSymbolDialog extends JDialog {
     private JLabel pipeLbl;
     private JLabel options;
     private Transition transition;
-    
+
     public TransitionSymbolDialog(JFrame parent, Transition transition) {
         super(parent);
         this.transition = transition;
         initializeComponents();
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        pack(); 
+        pack();
         setModal(true);
         setVisible(true);
     }
-    
+
     private void initializeComponents() {
         setTitle("Transition Input");
         setPreferredSize(new Dimension(350, 130));
         setResizable(false);
         setLocationRelativeTo(null);
-        
+
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        contentPane.setBackground(Color.BLACK);
         
         symbolBox = new JTextField();
         symbolBox.setDocument(new JTextFieldLimit(1));
         symbolBox.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent ae) {
                 addTransitionInfo();
@@ -94,6 +96,7 @@ public class TransitionSymbolDialog extends JDialog {
         
         dzetaBtn = new JButton();
         dzetaBtn.setText(Constants.DZETA + "");
+        setMaterialLNF(dzetaBtn);
         dzetaBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,24 +106,27 @@ public class TransitionSymbolDialog extends JDialog {
         
         epsilonBtn = new JButton();
         epsilonBtn.setText(Constants.EPSILON + "");
+        setMaterialLNF(epsilonBtn);
         epsilonBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 copyToClipboard(Constants.EPSILON + "");
             }
         });
-        
-        addBtn = new JButton();
-        addBtn.setText("+");
+
+        addBtn = new JButton("+");
+        addBtn.setFocusable(false);
+        setMaterialLNF(addBtn);
         addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addTransitionInfo();
             }
         });
-        
-        okBtn = new JButton();
-        okBtn.setText("OK");
+
+        okBtn = new JButton("OK");
+        okBtn.setFocusable(false);
+        setMaterialLNF(okBtn);
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,9 +137,10 @@ public class TransitionSymbolDialog extends JDialog {
                 }
             }
         });
-        
-        xBtn = new JButton();
-        xBtn.setText("X");
+
+        xBtn = new JButton("X");
+        xBtn.setFocusable(false);
+        setMaterialLNF(xBtn);
         xBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,8 +149,12 @@ public class TransitionSymbolDialog extends JDialog {
         });
         
         options = new JLabel(transition.getTransitionText());
+        options.setForeground(Color.YELLOW);
+        
         commaLbl = new JLabel(",");
+        commaLbl.setForeground(Color.WHITE);
         pipeLbl = new JLabel("|");
+        pipeLbl.setForeground(Color.WHITE);
         
         symbolBox.setBounds(70, 30, 30, 30);
         commaLbl.setBounds(100, 30, 10, 30);
@@ -183,7 +194,7 @@ public class TransitionSymbolDialog extends JDialog {
             options.setText(transition.getTransitionText());
         }
     }
-    
+
     private void removeTransition() {
         MainFrame.getAutomaton().getTransitions().remove(transition);
         dispose();

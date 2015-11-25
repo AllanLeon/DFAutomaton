@@ -1,6 +1,8 @@
 package dfautomaton.view;
 
 import dfautomaton.model.Automaton;
+import static dfautomaton.view.MainFrame.setMaterialLNF;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,10 +44,10 @@ public class InputDialog extends JDialog {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        contentPane.setBackground(Color.BLACK);
         
         textBox = new JTextField();
         textBox.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent ae) {
                 dispose();
@@ -53,8 +55,8 @@ public class InputDialog extends JDialog {
             }
         });
         
-        okBtn = new JButton();
-        okBtn.setText("OK");
+        okBtn = new JButton("OK");
+        setMaterialLNF(okBtn);
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -158,13 +158,6 @@ public class MainFrame extends JFrame implements ActionListener {
         start();
     }
 
-    public static void setMaterialLNF(Component comp) {
-        comp.setBackground(Color.BLACK);
-        comp.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        comp.setForeground(Color.BLUE);
-        
-    }
-
     public void start() {
         Timer timer = new Timer(1000 / 60, this);
         timer.start();
@@ -200,5 +193,11 @@ public class MainFrame extends JFrame implements ActionListener {
         } catch (AutomatonException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public static void setMaterialLNF(Component comp) {
+        comp.setBackground(Color.BLACK);
+        comp.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        comp.setForeground(Color.BLUE);
     }
 }
