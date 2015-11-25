@@ -7,7 +7,7 @@
 package dfautomaton.view;
 
 import dfautomaton.data.Constants;
-import dfautomaton.model.Configuration;
+import dfautomaton.model.ConfigurationStack;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
@@ -20,10 +20,10 @@ import javax.swing.JPanel;
  */
 public class ConfigurationPanel extends JPanel {
     
-    private final Configuration configuration;
+    private final ConfigurationStack configuration;
     private JLabel label;
     
-    public ConfigurationPanel(Configuration configuration) {
+    public ConfigurationPanel(ConfigurationStack configuration) {
         this.configuration = configuration;
         initComponents();
     }
@@ -39,12 +39,12 @@ public class ConfigurationPanel extends JPanel {
         setBorder(BorderFactory.createBevelBorder(1, Color.WHITE, Color.DARK_GRAY));
         setPreferredSize(new Dimension(Constants.CONFIGURATION_WIDTH, Constants.CONFIGURATION_HEIGHT));
         
-        label = new JLabel();
-        if (configuration.getWord().equals("")) {
-            label.setText(String.format("%s, %s", configuration.getState().getName(), '\u03B5'));
+        label = new JLabel(configuration.toString());
+        /*if (configuration.getWord().equals("")) {
+            label.setText(String.format("%s, %s", configuration.getState().getName(), Constants.EPSILON));
         } else {
             label.setText(String.format("%s, %s", configuration.getState().getName(), configuration.getWord()));
-        }
+        }*/
         
         setToolTipText(label.getText());
         add(label);

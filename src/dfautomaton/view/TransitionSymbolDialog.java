@@ -1,7 +1,12 @@
 package dfautomaton.view;
 
+import dfautomaton.data.Constants;
 import dfautomaton.model.Transition;
+import dfautomaton.model.TransitionInfo;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -23,11 +28,17 @@ import javax.swing.text.PlainDocument;
 public class TransitionSymbolDialog extends JDialog {
     
     private JPanel contentPane;
-    private JTextField textBox;
+    private JTextField symbolBox;
+    private JTextField topBox;
+    private JTextField nextTopBox;
+    private JButton dzetaBtn;
+    private JButton epsilonBtn;
     private JButton addBtn;
     private JButton okBtn;
     private JButton xBtn;
-    private JLabel symbols;
+    private JLabel commaLbl;
+    private JLabel pipeLbl;
+    private JLabel options;
     private Transition transition;
     
     public TransitionSymbolDialog(JFrame parent, Transition transition) {
@@ -51,13 +62,51 @@ public class TransitionSymbolDialog extends JDialog {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        textBox = new JTextField();
-        textBox.setDocument(new JTextFieldLimit(1));
-        textBox.addActionListener(new ActionListener() {
+        symbolBox = new JTextField();
+        symbolBox.setDocument(new JTextFieldLimit(1));
+        symbolBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                addSymbol();
+                addTransitionInfo();
+            }
+        });
+        
+        topBox = new JTextField();
+        topBox.setDocument(new JTextFieldLimit(1));
+        topBox.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                addTransitionInfo();
+            }
+        });
+        
+        nextTopBox = new JTextField();
+        nextTopBox.setDocument(new JTextFieldLimit(2));
+        nextTopBox.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                addTransitionInfo();
+            }
+        });
+        
+        dzetaBtn = new JButton();
+        dzetaBtn.setText(Constants.DZETA + "");
+        dzetaBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                copyToClipboard(Constants.DZETA + "");
+            }
+        });
+        
+        epsilonBtn = new JButton();
+        epsilonBtn.setText(Constants.EPSILON + "");
+        epsilonBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                copyToClipboard(Constants.EPSILON + "");
             }
         });
         
@@ -66,7 +115,7 @@ public class TransitionSymbolDialog extends JDialog {
         addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addSymbol();
+                addTransitionInfo();
             }
         });
         
@@ -75,10 +124,10 @@ public class TransitionSymbolDialog extends JDialog {
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (transition.getSymbols().size() > 0) {
+                if (transition.getOptions().size() > 0) {
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Transition doesn't contain any symbol!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Transition doesn't contain any option!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -92,34 +141,60 @@ public class TransitionSymbolDialog extends JDialog {
             }
         });
         
-        symbols = new JLabel(transition.getTransitionText());
+        options = new JLabel(transition.getTransitionText());
+        commaLbl = new JLabel(",");
+        pipeLbl = new JLabel("|");
         
-        textBox.setBounds(70, 30, 100, 30);
+        symbolBox.setBounds(70, 30, 30, 30);
+        commaLbl.setBounds(100, 30, 10, 30);
+        topBox.setBounds(110, 30, 30, 30);
+        pipeLbl.setBounds(140, 30, 10, 30);
+        nextTopBox.setBounds(150, 30, 30, 30);
+        dzetaBtn.setBounds(200, 0, 50, 30);
+        epsilonBtn.setBounds(250, 0, 50, 30);
         addBtn.setBounds(200, 30, 50, 30);
         okBtn.setBounds(260, 30, 60, 30);
         xBtn.setBounds(10, 30, 50, 30);
-        symbols.setBounds(10, 80, 350, 20);
+        options.setBounds(10, 80, 350, 20);
         
-        contentPane.add(textBox);
+        contentPane.add(symbolBox);
+        contentPane.add(commaLbl);
+        contentPane.add(topBox);
+        contentPane.add(pipeLbl);
+        contentPane.add(nextTopBox);
+        contentPane.add(dzetaBtn);
+        contentPane.add(epsilonBtn);
         contentPane.add(addBtn);
         contentPane.add(okBtn);
         contentPane.add(xBtn);
-        contentPane.add(symbols);
+        contentPane.add(options);
     }
     
-    private void addSymbol() {
-        if (textBox.getText().length() == 0) {
-            transition.addSymbol('\u03B5');
-        } else {
-            transition.addSymbol(textBox.getText().charAt(0));
-            textBox.setText("");
+    private void addTransitionInfo() {
+        if (topBox.getText().length() > 0 && nextTopBox.getText().length() > 0) {
+            if (symbolBox.getText().length() == 0) {
+                transition.addOption(new TransitionInfo(Constants.EPSILON, topBox.getText().charAt(0), nextTopBox.getText()));
+            } else {
+                transition.addOption(new TransitionInfo(symbolBox.getText().charAt(0), topBox.getText().charAt(0), nextTopBox.getText()));
+            }
+            symbolBox.setText("");
+            topBox.setText("");
+            nextTopBox.setText("");
+            options.setText(transition.getTransitionText());
         }
-        symbols.setText(transition.getTransitionText());
     }
     
     private void removeTransition() {
         MainFrame.getAutomaton().getTransitions().remove(transition);
         dispose();
+    }
+    
+    private void copyToClipboard(String text) {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Clipboard clipboard = toolkit.getSystemClipboard();
+        StringSelection strSel = new StringSelection(text);
+        clipboard.setContents(strSel, null);
+        JOptionPane.showMessageDialog(null, text + " copied to clipboard!", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
     
     class JTextFieldLimit extends PlainDocument {

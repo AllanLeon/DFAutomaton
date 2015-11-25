@@ -23,4 +23,6 @@ public class Constants {
     public static int CONFIGURATION_WIDTH = 100;
     public static int CONFIGURATION_HEIGHT = 30;
     public static final int STATE_RADIUS = 20;
+    public static final char EPSILON = '\u03B5';
+    public static final char DZETA = '\u0396';
 }

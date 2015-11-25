@@ -9,6 +9,7 @@ package dfautomaton.view;
 import dfautomaton.data.Constants;
 import dfautomaton.model.Automaton;
 import dfautomaton.model.Configuration;
+import dfautomaton.model.ConfigurationStack;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -72,9 +73,9 @@ public class ResultsFrame extends JFrame {
         getContentPane().add(stepBtn);
     }
     
-    private void addConfigurationsPanel(List<Set<Configuration>> configurations) {
+    private void addConfigurationsPanel(List<Set<ConfigurationStack>> configurations) {
         JPanel newPanel = new JPanel(new GridLayout(0, 1));
-        for (Configuration conf : configurations.get(0)) {
+        for (ConfigurationStack conf : configurations.get(0)) {
             newPanel.add(new ConfigurationPanel(conf));
         }
         panel.add(newPanel);
