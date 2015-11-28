@@ -34,12 +34,6 @@ public class ConfigurationPanel extends JPanel {
         setPreferredSize(new Dimension(Constants.CONFIGURATION_WIDTH, Constants.CONFIGURATION_HEIGHT));
         
         label = new JLabel(configuration.toString());
-        /*if (configuration.getWord().equals("")) {
-            label.setText(String.format("%s, %s", configuration.getState().getName(), Constants.EPSILON));
-        } else {
-            label.setText(String.format("%s, %s", configuration.getState().getName(), configuration.getWord()));
-        }*/
-        
         setToolTipText(label.getText());
         add(label);
     }

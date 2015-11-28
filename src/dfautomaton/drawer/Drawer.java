@@ -2,7 +2,6 @@ package dfautomaton.drawer;
 
 import dfautomaton.data.Constants;
 import dfautomaton.model.Automaton;
-import dfautomaton.model.Configuration;
 import dfautomaton.model.State;
 import dfautomaton.model.State.StateType;
 import dfautomaton.model.Transition;
@@ -279,14 +278,5 @@ public class Drawer {
         drawTransitions(g, automaton.getTransitions());
         drawStates(g, automaton.getStates());
         drawInitialStateArrow(g, automaton.getInitialState());
-    }
-
-    public static void drawConfiguration(Graphics g, Configuration conf) {
-        g.setColor(Color.BLACK);
-        g.drawOval(Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2, Constants.STATE_RADIUS, Constants.STATE_RADIUS);
-        System.out.printf("%d %d\n", Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2);
-        //drawCircle(g, Constants.STATE_RADIUS + 5, Constants.CONFIGURATION_HEIGHT / 2, Constants.STATE_RADIUS, Color.BLACK);
-        g.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        g.drawString(conf.getWord(), Constants.STATE_RADIUS * 2 + 5, Constants.CONFIGURATION_HEIGHT / 2);
     }
 }

@@ -21,7 +21,6 @@ import java.util.Set;
 public class Transition {
     
     private State initialState;
-    //private Set<Character> symbols;
     private Set<TransitionInfo> options;
     private State nextState;
     private Point startPos;
@@ -30,16 +29,8 @@ public class Transition {
     public Transition(State initialState, State nextState) {
         this.initialState = initialState;
         this.nextState = nextState;
-        //this.symbols = new HashSet<>();
         this.options = new HashSet<>();
         calculatePos();
-    }
-
-    public Transition(State initialState, char symbol, State nextState) {
-        this.initialState = initialState;
-        //this.symbols = new HashSet<>();
-        this.nextState = nextState;
-        //symbols.add(symbol);
     }
 
     /**
@@ -48,17 +39,6 @@ public class Transition {
     public State getInitialState() {
         return initialState;
     }
-
-    /**
-     * @return the symbols
-     */
-    /*public Set<Character> getSymbols() {
-        return symbols;
-    }
-    
-    public void addSymbol(Character symbol) {
-        symbols.add(symbol);
-    }*/
     
     public Set<TransitionInfo> getOptions() {
         return options;
@@ -81,13 +61,6 @@ public class Transition {
     public void setInitialState(State initialState) {
         this.initialState = initialState;
     }
-
-    /**
-     * @param symbols the symbols to set
-     */
-    /*public void setSymbols(Set<Character> symbols) {
-        this.symbols = symbols;
-    }*/
     
     public void setOptions(Set<TransitionInfo> options) {
         this.options = options;
@@ -100,37 +73,8 @@ public class Transition {
         this.nextState = nextState;
     }
     
-    /*public List<Configuration> execute(Configuration current) throws TransitionException {
-        List<Configuration> nextConfigurations = new ArrayList<>();
-        if (current.getState().equals(initialState)) {    
-            for (Character symbol : symbols) {
-                if (!current.getWord().equals("")) {
-                    if (symbol == Constants.EPSILON) {
-                        nextConfigurations.add(new Configuration(nextState, current.getWord()));
-                    } else if (current.getWord().charAt(0) == symbol) {
-                        nextConfigurations.add(new Configuration(nextState, current.getWord().substring(1)));
-                    }
-                }
-            }
-        }
-        return nextConfigurations;
-    }*/
-    
     public List<ConfigurationStack> executeWithStack(ConfigurationStack current) throws TransitionException {
         List<ConfigurationStack> nextConfigurations = new ArrayList<>();
-        /*if (current.getState().equals(initialState)) {
-            for (TransitionInfo info : options) {
-                if (!current.wordIsEmpty() && current.matches(info.getTop())) {
-                    if (info.getSymbol() == Constants.EPSILON) {
-                        nextConfigurations.add(new ConfigurationStack(nextState,
-                                current.getWord(), current.updateStack(info.getNextTop())));
-                    } else if (current.getWord().charAt(0) == info.getSymbol()) {
-                        nextConfigurations.add(new ConfigurationStack(nextState,
-                                current.getWord().substring(1), current.updateStack(info.getNextTop())));
-                    }
-                }
-            }
-        }*/
         
         if (current.getState().equals(initialState)) {
             for (TransitionInfo info : options) {
@@ -187,19 +131,6 @@ public class Transition {
         }
         return false;
     }
-    
-    /*public String getTransitionText() {
-        if (symbols.isEmpty()) {
-            return "";
-        } else {
-            String transitionText = "";
-            for (Character symbol : symbols) {
-                transitionText += symbol + ",";
-            }
-            transitionText = transitionText.substring(0, transitionText.length() - 1);
-            return transitionText;
-        }
-    }*/
     
     public String getTransitionText() {
         if (options.isEmpty()) {
